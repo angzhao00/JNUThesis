@@ -1,0 +1,21 @@
+claim_id,chapter,section,claim_text,evidence_needed,record_ids,evidence_location,verification_status,notes
+C001,1,1.1,"φ-OTDR/DAS利用相干瑞利后向散射实现长距离、分布式动态振动感知",review and foundational papers,LIT001;LIT002;LIT007;LIT013,publisher abstracts and review full text,seed verified,full-text page locations to be added
+C002,1,1.2,"数字相干与外差检测是恢复瑞利回波复振幅和相位的重要路线",direct system papers,LIT002;LIT003,original abstracts,seed verified,performance conditions must be stated
+C003,1,1.2,"SOA载流子和增益动态可通过折射率耦合形成动态相位与频率啁啾",SOA mechanism papers,LIT004;LIT006;LIT014;LIT021,publisher abstracts and identified full texts,mechanism supported,does not yet prove mechanism in user DAS
+C004,1,1.2,"AOM的光学开关响应受声场传播和光束重叠影响，门控时序需要考虑建立时间",AOM dynamic-response model,LIT020,full text equations and Table I,source verified,third-chapter timing parameters require experiment
+C005,1,1.2,"DAS询问器正从分立器件向片上或混合集成方向发展",direct integrated-DAS papers,LIT022;LIT023;LIT024,open full texts and conference abstract,seed verified,user module is package-level integration rather than PIC
+C006,1,1.2,"集成与分立系统应在光学、接收、传感和工程指标上进行同条件比较",direct comparison plus author analysis,LIT023,abstract and experimental figures,partly verified,final metric set depends on available user data
+C007,2,2.2,"相干OTDR回波可由脉冲照明范围内随机散射点的复振幅叠加描述",signal-model paper,LIT005,full-text equations needed,metadata and abstract verified,page-level extraction pending
+C008,2,2.4,"I/Q幅度不平衡和IF滤波器参数会改变相干φ-OTDR的幅相恢复性能",direct error-analysis papers,LIT008;LIT016,original papers,seed verified,page-level extraction pending
+C009,2,2.4,"实际拍频与数字本振失配会形成残余基带旋转并影响相位解调",frequency-drift and demodulation papers,LIT015;LIT017,original papers,seed verified,derive residual-frequency equation in Chapter 2
+C010,2,2.4,"偏振分集可降低单一偏振通道的衰落风险，但通道融合需校准增益和时延",polarization-diversity papers,LIT009;LIT012;LIT023,original papers,seed verified,user method remains system optimization
+C011,2,2.2,"回波时间与距离满足z=ct/(2ng)，采样间隔对应c/(2ngfs)",foundational phi-OTDR signal model,LIT002;LIT005;LIT013,full text equations and system descriptions,verified for draft,check symbol convention against final template
+C012,2,2.2,"脉冲宽度决定近似空间分辨率，重复频率约束最大无模糊测距",foundational and review papers,LIT002;LIT005;LIT007;LIT027,full text principle sections,verified for draft,actual resolution also depends on receiver bandwidth
+C013,2,2.2,"差分相位与标距内平均轴向应变近似成正比",quantitative phase-strain papers,LIT001;LIT005;LIT033,full text equations,verified for draft,photoelastic coefficient definition must remain consistent
+C014,2,2.3,"SOA注入、复合和受激辐射共同决定载流子与增益动态",SOA carrier-rate and traveling-wave models,LIT014;LIT046;LIT051;LIT052,model sections,verified for draft,device-specific parameters require datasheet or fitting
+C015,2,2.3,"SOA ASE随增益和观测光学带宽增加",SOA ASE and self-phase-modulation papers,LIT053,model and discussion,verified for draft,simplified one-polarization expression used
+C016,2,2.3,"SOA增益变化通过线宽增强因子耦合到相位并形成瞬态频率变化",SOA chirp and linewidth-enhancement papers,LIT004;LIT006;LIT021;LIT045,full text equations and heterodyne characterization,mechanism verified for draft,does not prove the dominant cause in user system
+C017,2,2.3,"AOM一阶衍射产生射频频率量级的光频移且动态响应受声学渡越影响",AOM theory and temporal-response papers,LIT020;LIT054,full text model,verified for draft,sign depends on geometry and diffraction order
+C018,2,2.4,"BPD差分输出保留信号光与本振光交叉拍频并抑制理想共模项",coherent phi-OTDR papers,LIT002;LIT003;LIT005,system and signal equations,verified for draft,real CMRR depends on gain and delay matching
+C019,2,2.4,"数字本振与拍频失配在复包络中形成残余旋转",frequency-offset and drift papers,LIT015;LIT017;LIT073,full text models,verified for draft,residual-frequency sign follows convention
+C020,2,2.4,"低SNR和偏振近正交会降低拍频幅度并增加相位误差和展开失败概率",phase-error and polarization-diversity papers,LIT009;LIT012;LIT057;LIT075,full text models and experiments,verified for draft,final fusion method is conventional optimization

@@ -1,0 +1,16 @@
+<head>
+<noscript><meta http-equiv="Refresh" content="0;URL=/viewmedia.cfm?r=1&rwjcode=prj&uri=prj-12-3-465&html=true" /></noscript>
+<title>OPG</title>
+</head>
+<body>
+<p>Please wait...</p>
+<script nonce="q4zkK3af3VYe2AQs+V+798yVcj+vezupKj/OOgrDZ7s=">
+fetch('/checkjs.cfm?s=1785209915311%7C57F1F1B774E013869DE4A22DA7C4068B2EDE65F03BB2234993A7C72166BB9932&x=1')
+.then(function() {
+window.location.replace('/viewmedia.cfm?r=1&rwjcode=prj&uri=prj-12-3-465&html=true');
+})
+.catch(function() {
+window.location.replace('/viewmedia.cfm?r=1&rwjcode=prj&uri=prj-12-3-465&html=true');
+});
+</script>
+</body>

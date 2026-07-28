@@ -2,26 +2,32 @@
 
 \chapter*{摘\texorpdfstring{\qquad}{} 要}\addcontentsline{toc}{chapter}{摘要}
 \thispagestyle{main}
-%% 加星号*的章节默认是不加入目录中的
-%% 这个命令\addcontentsline{toc}{chapter}{摘\qquad 要}
-%% 使其也加到目录中，且显示为“摘    要”，以下类似
-%% 每一章第一页默认是没有页眉的，这里的命令\thispagestyle{main}
-%% 使这一页也有页眉，以下类似
 
-本模板由Yongtao Zhou制作，Ming Li二次修改，非官方模板，请选择性使用，最终解释权和所有权归作者所有。仅供个人学习、学术交流使用，可以随意修改，保留作者信息即可$\wedge\_\wedge$。
-如果您在使用中有建议和发现任何的bug，欢迎与本人联系。作者邮箱：\newline li-ming96@foxmail.com。
-% \par 本项目地址：https:$//$github.com$/$ytZhou$/$JNUMasterThesis
+基于相位敏感光时域反射（phase-sensitive optical time-domain reflectometry，$\varphi$-OTDR）的分布式声学传感（distributed acoustic sensing，DAS）能够利用通信光纤连续测量沿线振动和动态应变，具有长距离、连续覆盖、抗电磁干扰和无源布设等特点。外差式$\varphi$-OTDR通过声光移频与相干接收保留瑞利后向散射光场信息，为扰动定位和波形恢复提供基础。然而，分立式光路的器件和连接点较多，系统体积、装调重复性及长期稳定性容易受到影响；脉冲发射、移频门控、偏振衰落、接收噪声和数字解调参数之间也存在耦合。
 
-PS：注意做好项目备份，避免造成不必要的损失。由于错误操作造成的损失，作者概不负责。
+针对上述问题，本文围绕集成激光二极管--半导体光放大器（laser diode--semiconductor optical amplifier，LD--SOA）光源的外差式DAS开展研究。首先，建立瑞利散射与距离映射、LD--SOA增益和载流子--折射率耦合、声光调制器（acousto-optic modulator，AOM）动态响应、平衡相干探测及数字I/Q解调模型，分析脉冲和解调参数对测距与相位恢复的影响。随后研究LD--SOA驱动状态对输出脉冲、功率、消光比、放大自发辐射噪声和外差拍频的影响，并结合载流子--折射率耦合和链路时延分析拍频中心变化的可能机制；同时设计SOA--AOM--DAQ协同门控时序，使有效光脉冲处于AOM稳定声光作用窗口内。
 
-\bigskip
-\noindent {\bfseries 关键词：} 模板；非官方；学术交流；备份
+其次，将LD--SOA光源模块、AOM、$2\times2$光耦合器、环形器、偏振分束器（polarization beam splitter，PBS）和平衡光电探测器（balanced photodetector，BPD）进行模块级集成，完成具有脉冲发射、移频、收发分离、偏振分集和平衡探测功能的DAS收发一体化光电模组。为避免将器件差异或参数调节误判为集成收益，本文对分立式系统和集成模组开展等参数比较，并在统一规则下分别优化，从光电特性、振动测量、长期稳定性及体积、接口和装调等方面评价集成的收益与代价。
+
+最后，开展双偏振通道校准和数字解调参数优化，分析中心频率、区域、差分标距和滤波配置对相位连续性、扰动定位及波形恢复的影响，并采用压电陶瓷振动实验验证分立式系统和集成模组的端到端传感能力。本文形成了“LD--SOA发射特性--收发光路集成--相干接收解调--DAS传感验证”的研究链条，可为外差式DAS系统的小型化和模块化实现提供参考。
+
+% 待第3、4章实验数据定稿后，应在摘要中补入2--3项最有代表性的量化结果，
+% 例如拍频稳定度、振动信噪比、定位误差、体积或长期漂移的对比数据。
+
+\smallskip
+\noindent {\bfseries 关键词：} 分布式声学传感；相位敏感光时域反射；LD--SOA；收发一体化光电模组
 
 
 \chapter*{\bfseries \sffamily Abstract}\addcontentsline{toc}{chapter}{Abstract}
 \thispagestyle{main}
 
-Artificial intelligence (AI) is a field of computer science focused on creating systems that can perform tasks typically requiring human intelligence. These tasks include problem-solving, learning from data, understanding natural language, recognizing patterns, and decision-making. AI is broadly divided into two types: narrow AI, which is designed for specific tasks like image recognition or language processing, and general AI, which would theoretically perform any intellectual task a human can do. Key methods include machine learning, where systems improve over time from experience, and deep learning, which uses neural networks to process large datasets. AI is widely used across sectors, from healthcare and finance to automotive and entertainment, transforming industries and enhancing efficiency.
+Distributed acoustic sensing (DAS) based on phase-sensitive optical time-domain reflectometry ($\varphi$-OTDR) enables continuous measurements of vibration and dynamic strain along standard telecommunication fibers. It provides long sensing range, continuous spatial coverage, immunity to electromagnetic interference, and passive deployment capability. In heterodyne $\varphi$-OTDR, an acousto-optic modulator introduces a frequency shift, while coherent reception preserves the amplitude and phase of the Rayleigh backscattered field for event localization and waveform reconstruction. However, a discrete optical setup generally contains numerous components and fiber connections, which may affect system size, alignment repeatability, and long-term stability. In addition, pulse generation, frequency-shift gating, polarization fading, receiver noise, and digital-demodulation parameters are mutually coupled, and the overall performance cannot be determined by a single device specification.
+
+To address these issues, this thesis investigates the transmitter characteristics, optical-path integration, and receiver demodulation of a heterodyne DAS system employing an integrated laser-diode--semiconductor-optical-amplifier (LD--SOA) source. A unified model is first established to describe Rayleigh backscattering and distance mapping, LD--SOA gain and carrier--index coupling, acousto-optic modulator (AOM) frequency shifting and transient response, balanced coherent detection, and digital I/Q demodulation. The effects of pulse width, repetition rate, differential gauge length, and the mismatch between the actual beat-note frequency and the digital local oscillator on ranging and phase recovery are analyzed. The influence of the LD--SOA driving state on the output pulse, optical power, extinction ratio, amplified spontaneous emission noise, and heterodyne beat note is then investigated. For the experimentally observed variation in the beat-note center frequency, its possible mechanism is analyzed in terms of carrier--index coupling and link delay. An SOA--AOM--DAQ coordinated gating sequence is also designed so that the effective optical pulse lies within the stable acousto-optic interaction window of the AOM.
+
+An integrated transmit--receive optoelectronic module is further developed by assembling the LD--SOA source module, AOM, $2\times2$ optical coupler, optical circulator, polarization beam splitter (PBS), and balanced photodetector (BPD) at the module level. The module retains the pulse-generation, frequency-shifting, transmit--receive separation, polarization-diversity, and balanced-detection functions required by a heterodyne DAS system. To avoid attributing device differences or parameter tuning to integration itself, the discrete setup and the integrated module are compared under identical parameter settings and are also evaluated after separate optimization under a common rule. The benefits and tradeoffs of module-level integration are assessed in terms of insertion loss, beat-note center frequency and signal-to-noise ratio, noise floor, consistency between polarization channels, vibration-sensing performance, long-term stability, physical size, external interfaces, and alignment effort.
+
+Finally, dual-polarization channel calibration and digital-demodulation parameter optimization are carried out to improve receiver stability. The effects of center-frequency setting, region selection, differential gauge length, and filtering configuration on phase continuity, event localization, and waveform reconstruction are examined. Piezoelectric-transducer vibration experiments are used to evaluate the end-to-end sensing capabilities of both the discrete system and the integrated module. The thesis thereby establishes a research chain from LD--SOA transmitter characteristics, through transmit--receive optical integration and coherent demodulation, to DAS sensing validation, providing a reference for the miniaturization, modular implementation, and performance assessment of heterodyne DAS systems.
 
 \bigskip
-\noindent {\bfseries Key Words:} artificial intelligence; machine learning; deep learning
+\noindent {\bfseries Key Words:} distributed acoustic sensing; phase-sensitive optical time-domain reflectometry; LD--SOA; integrated transmit--receive optoelectronic module

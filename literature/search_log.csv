@@ -1,0 +1,11 @@
+search_id,search_date,database,theme,query,result_count,export_path,notes
+S006,2026-07-27,OpenAlex; Crossref; DOI resolver; Optica; IEEE,T1; T4,"phi-OTDR review; coherent detection; fading; pulse coding; phase noise; I/Q demodulation",20,literature/literature_master.csv,"批量扩展并以 DOI 内容协商核验元数据"
+S007,2026-07-27,OpenAlex; Crossref; DOI resolver; Optica; IEEE; Elsevier,T2; T3,"SOA carrier dynamics; gain saturation; ASE; transient chirp; AOM temporal response; pulse picking; synchronization",12,literature/literature_master.csv,"SOA 机理证据与 AOM 时序证据；相邻机理论文标为 B/C 级"
+S008,2026-07-27,OpenAlex; Crossref; DOI resolver; Optica; IEEE; MDPI,T1; T4,"polarization diversity; coherent MIMO; chirped pulse; source stability; fading suppression; DAS review",14,literature/literature_master.csv,"补足偏振、衰落、系统发展和应用约束"
+S009,2026-07-27,Optica; IEEE; Crossref; DOI resolver,T4,"heterodyne phi-OTDR; phase offset; I/Q imbalance; SNR stability; spatial phase shifting; low-bit sampling",5,literature/literature_master.csv,"补足第二章解调误差和系统稳定性模型"
+S010,2026-07-27,CNKI; Chinese university repositories; Chinese journal official sites; DOI resolver,T1; T3; T4,"中文 φ-OTDR; 分布式光纤振动传感; 学位论文; 解调; 频漂; 工程应用",10,literature/literature_master.csv,"新增并核验5篇2022—2025年中文硕博学位论文和5篇2023—2025年中文期刊论文"
+S001,2026-07-27,Optica; IEEE; Crossref,T1,"phase-sensitive optical time-domain reflectometry OR phi-OTDR OR distributed acoustic sensing; coherent detection; review",,literature/literature_master.csv,"小样本试检；已核验奠基论文、综述、相干探测和脉冲编码代表作"
+S002,2026-07-27,Optica; IEEE; Crossref,T2,"semiconductor optical amplifier; carrier transient; transient chirp; gain; linewidth enhancement factor",,literature/literature_master.csv,"小样本试检；区分SOA器件机理证据与SOA直接用于DAS的系统证据"
+S003,2026-07-27,Optica; SPIE,T3,"acousto-optic modulator; heterodyne phi-OTDR; balanced detection; RF gating; synchronization",,literature/literature_master.csv,"小样本试检尚未完成；AOM门控和同步论文仍需扩展"
+S004,2026-07-27,Optica; IEEE; SPIE; Crossref,T4,"phi-OTDR; I/Q; frequency drift; IF spectrum; polarization diversity; fading suppression; real-time demodulation",,literature/literature_master.csv,"小样本试检；已核验相位解调、频漂、I/Q失衡和衰落抑制代表作"
+S005,2026-07-27,Optica; SPIE; IEEE,T5,"compact OR integrated OR miniaturized; DAS interrogator; optical transceiver; sensing module",,literature/literature_master.csv,"小样本试检尚未完成；需严格区分通信收发器、普通OTDR与DAS收发模组"

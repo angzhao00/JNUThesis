@@ -4,19 +4,6 @@
 
 随着能源输运、轨道交通、周界安防、结构健康监测和地球物理观测等场景对长距离连续监测需求的增加，传统离散式电学传感器在布设密度、供电、抗电磁干扰和维护成本等方面逐渐显现局限。分布式光纤传感以普通通信光纤同时作为传输介质和传感介质，可沿光纤形成连续空间采样通道，并具有无源、抗电磁干扰和便于远距离布设等特点。以瑞利散射为基础的分布式声学传感（distributed acoustic sensing，DAS）能够对沿线动态应变、振动和声学信号进行连续监测，已成为分布式光纤传感的重要技术路线\cite{zhang2021phase_cn,muanenda2018advances,wang2020recent,he2021review,liu2022advances,shang2022research,zhu2022linear}。国内研究已将DAS用于GIS耐压测试、风电地埋电缆、供水管道泄漏和海缆锚害等监测场景\cite{huang2023gis_cn,huang2025cable_thesis,zhang2023pipeline_thesis,zhang2025submarine_cn}，并在语音与脚步等周界振动监测中完成系统实验验证\cite{sun2023voice_cn}，表明该技术正由实验室性能研究向行业应用拓展。
 
-\begin{figure}[htbp]
-  \centering
-  \subfloat[轨道交通基础设施]{\includegraphics[width=0.315\textwidth]{images/chap1_application_railway.jpg}}
-  \hfill
-  \subfloat[长距离管线]{\includegraphics[width=0.315\textwidth]{images/chap1_application_pipeline.jpg}}
-  \hfill
-  \subfloat[风电设施]{\includegraphics[width=0.315\textwidth]{images/chap1_application_wind.jpg}}
-  \caption[DAS典型应用场景实物图]{DAS典型应用场景实物图。照片来源：（a）Shyjuo，CC0 1.0；（b）美国鱼类和野生动物管理局，公有领域；（c）Mussi Katz，CC0 1.0；均经等比例裁剪。图中照片用于说明DAS的潜在布设环境，不代表本文的现场实验。}
-  \label{fig:chap1_das_applications}
-\end{figure}
-
-图\ref{fig:chap1_das_applications}所示场景在空间尺度、环境条件和目标事件频率方面存在明显差异，但都要求传感链路能够在较长距离上保持连续覆盖，并在复杂背景下稳定恢复局部扰动。因此，DAS研究不仅需要提高单次测量的灵敏度，还需要同时考虑系统体积、长期稳定性、重复装调一致性和现场部署条件。
-
 相位敏感光时域反射（phase-sensitive optical time-domain reflectometry，φ-OTDR）利用窄线宽相干光脉冲在光纤中产生的瑞利后向散射，通过回波到达时间确定扰动位置，并通过散射光场的幅度或相位变化恢复外界动态信息。早期研究验证了相干瑞利散射对应变变化的敏感性\cite{posey2000strain}，随后窄线宽光源稳定性\cite{choi2003stable}、外差相干探测\cite{lu2010distributed}和数字相干接收\cite{pan2011phase}等工作逐步奠定了定量分布式振动测量的系统基础。与只检测回波强度的方案相比，相干接收能够保留复光场信息，为差分相位解调、波形恢复和稳定性分析提供条件\cite{liokumovich2015fundamentals,yang2022digitalized}。
 
 实际DAS性能并不由单一指标决定。脉冲宽度、峰值功率和消光比影响空间分辨率及相邻脉冲之间的背景串扰；光源线宽、频率漂移和非线性传播影响相干性与相位噪声；声光调制器（acousto-optic modulator，AOM）的移频与动态响应决定外差中频和有效门控窗口；偏振态随机演化会造成局部相干衰落；采样率、数字本振、滤波器带宽、差分标距和相位展开方法则共同决定解调结果的连续性\cite{martins2013modulation,ren2016extinction,lu2021detection,lu2022phaseerror,zhong2021frequency,zhao2024frequency,qian2025drift}。因此，发射、传输、接收和数字处理不宜被视为彼此独立的模块，而需要在统一的系统链路中分析。
@@ -63,31 +50,13 @@ SOA方面，1997年，Mecozzi和M{\o}rk分析了皮秒脉冲引起的SOA增益�
 
 分立DAS光路便于实验室研究，但器件数量和光纤连接点增多会带来体积、插入损耗、偏振敏感性和装调重复性等工程问题，因而系统小型化与光路集成逐渐成为研究方向。2023年，Cheng等报道用于DAS的片上高消光比硅基电光调制器，体现了发射端光子集成在改善脉冲消光比和缩小系统体积方面的潜力\cite{cheng2023onchip}。2024年，Jin等在硅光平台上集成调制发射、双正交和双偏振相干接收功能，并与分立DAS系统开展性能比较，验证了集成询问器用于分布式声学传感的可行性\cite{jin2024integrated}。2026年，Jin等进一步将InP外腔激光器与SOI光子芯片结合，形成混合集成DAS询问方案，表明系统集成正在由单个调制或接收功能向光源、发射和相干接收协同集成发展\cite{jin2026hybrid}。
 
-\begin{figure}[htbp]
-  \centering
-  \subfloat[多项目晶圆交付的硅光芯片]{\includegraphics[width=0.56\textwidth]{images/chap1_literature_photonic_chip.png}}
-  \hspace{0.04\textwidth}
-  \subfloat[封装EOM与商用AOM]{\includegraphics[height=0.23\textwidth]{images/chap1_literature_packaged_eom_aom.png}}
-  \caption[DAS集成器件代表性实物图]{：（a）包含耦合微环EOM的硅光芯片；（b）封装EOM与商用AOM的尺寸对比。}
-  \label{fig:chap1_literature_hardware}
-\end{figure}
-
-图\ref{fig:chap1_literature_hardware}从实物尺度上展示了片上调制器及其封装单元。文献中的照片、器件结构和同条件系统对比共同构成集成化论证，而不是仅以尺寸缩小作为性能结论。这种“工程瓶颈—器件实现—基线比较—传感验证”的论证方式也说明，评价集成方案时必须同时给出光学指标、传感结果和工程指标。
-
 现有文献的集成对象以片上调制器、硅光相干接收器或混合集成询问器为主，与本文将成熟光纤器件封装成收发光模组的实现层级不同。因此，本文不以“片上集成”描述所研制模组，也不直接采用芯片论文的面积、耦合效率或工艺指标作为对照。更合适的比较维度包括：总插入损耗、脉冲峰值与消光比、拍频中心和谱宽、BPD噪声底、双偏振一致性、振动SNR、相位稳定性、扰动定位误差、体积、功耗、接口数量、装调时间以及重复连接后的性能离散度。
 
 分立与集成系统比较还应遵循等条件原则。两套系统应使用相同或可校准的输入光功率、SOA驱动、AOM频率、光纤长度、PZT位置、采样率和数字处理参数；若某些器件型号或内部光程不同，应在表格中明确列出并解释其对结果的影响。这样得到的结论才能回答集成模组究竟改善了工程一致性、长期漂移或传感性能中的哪些方面，而不是仅以体积缩小替代系统性能证明。
 
 \section{本文主要研究内容与技术路线}
 
-围绕集成LD--SOA光源DAS的发射、收发光路集成和相干解调问题，本文保持五章结构开展研究，整体技术路线如图\ref{fig:chap1_research_route}所示。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{images/chap1_research_route.pdf}
-  \caption{本文研究技术路线}
-  \label{fig:chap1_research_route}
-\end{figure}
+围绕集成LD--SOA光源DAS的发射、收发光路集成和相干解调问题，本文保持五章结构开展研究。
 
 第一章介绍DAS应用背景，综述φ-OTDR、SOA脉冲发射、AOM移频、相干接收、偏振衰落抑制、数字解调以及系统集成化的研究进展，并据此提出本文研究问题。
 
