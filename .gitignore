@@ -17,6 +17,11 @@
 # Common build folders
 build/
 out/
+tmp/
+
+# Large oscilloscope captures stay local; keep the compact processed summary.
+/data/chap3/3.3_soa_characterization/3.3.1-2/*.csv
+!/data/chap3/3.3_soa_characterization/3.3.1-2/processed_soa_characterization_summary.csv
 
 # OS/editor noise
 .DS_Store

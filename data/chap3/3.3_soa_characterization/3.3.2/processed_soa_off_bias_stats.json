@@ -1,0 +1,48 @@
+{
+  "fixed_conditions": {
+    "ld_current_mA": 200,
+    "tec_temperature_C": 30,
+    "soa_on_pulse_current_mA": 800,
+    "measurement_wavelength_nm": 1550,
+    "attenuator_removed": true,
+    "common_optical_reference_plane": true
+  },
+  "measurement_definition": {
+    "forward_scans": 5,
+    "reverse_scans": 1,
+    "biases_V": [
+      0,
+      -1,
+      -2,
+      -3,
+      -4,
+      -5
+    ],
+    "net_leakage": "power-meter reading minus paired laser-off background",
+    "extinction_ratio": "10*log10(on-state peak power/net static leakage)"
+  },
+  "dark_background_all_nW": {
+    "mean": 4.134444444444444,
+    "sd": 0.24765384187778186
+  },
+  "minimum_net_leakage": {
+    "off_bias_V": -3.0,
+    "mean_nW": 1.4173333333333333,
+    "sd_nW": 0.6940710818544934,
+    "ci95_halfwidth_nW": 0.7283829299192685
+  },
+  "maximum_static_extinction_ratio": {
+    "off_bias_V": -3.0,
+    "mean_dB": 81.97967713034633,
+    "sd_dB": 1.970306933024665,
+    "ci95_halfwidth_dB": 2.067710317050234
+  },
+  "on_peak_power_change_0_to_minus5_pct": -2.601364913689298,
+  "max_abs_reverse_delta_pct": {
+    "dark_nW": 8.016660426806439,
+    "leakage_reading_nW": 8.955798013708225,
+    "net_static_leakage_nW": 11.732152739346997,
+    "on_peak_power_mW": 0.5703789636504424
+  },
+  "max_abs_reverse_delta_static_extinction_ratio_dB": 0.06768675770602783
+}

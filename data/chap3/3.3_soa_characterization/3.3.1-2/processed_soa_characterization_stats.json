@@ -1,0 +1,44 @@
+{
+  "calibration": {
+    "intercept_mW": 4.989990314644108,
+    "slope_mW_per_mV": 0.5152905577531303,
+    "r_squared": 0.9964573749362129,
+    "rmse_mW": 2.3808254371408184,
+    "degrees_of_freedom": 23,
+    "residual_variance": 6.161228002322575,
+    "voltage_mean_mV": 192.73788000000002,
+    "voltage_sxx_mV2": 150115.06635264002,
+    "calibration_n": 25
+  },
+  "fixed_attenuation_dB": 42,
+  "current_range_mA": [
+    200,
+    2000
+  ],
+  "forward_scan_repeats": 5,
+  "raw_complete_pulses_per_current": [
+    399,
+    399
+  ],
+  "voltage_mean_endpoints_mV": [
+    86.0434,
+    941.5540000000001
+  ],
+  "power_mean_endpoints_mW": [
+    46.03,
+    490.16387612933494
+  ],
+  "scan_cv_range_pct": [
+    0.21560795208690509,
+    1.8507629357269253
+  ],
+  "pulse_cv_range_pct": [
+    0.6824185848236084,
+    4.742794513702393
+  ],
+  "apparent_width_range_ns": [
+    94.13533834586467,
+    103.35839598997494
+  ],
+  "max_abs_reverse_delta_pct": 3.9752032114026186
+}

@@ -1,0 +1,198 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage[UTF8,scheme=plain]{ctex}
+\usepackage{fontspec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,shadings}
+
+\setsansfont{Arial}
+\setCJKsansfont{Microsoft YaHei}
+\renewcommand{\familydefault}{\sfdefault}
+
+\definecolor{ink}{HTML}{24313D}
+\definecolor{probe}{HTML}{D95C4F}
+\definecolor{probehalo}{HTML}{F5C4BC}
+\definecolor{reference}{HTML}{3F73C9}
+\definecolor{scatter}{HTML}{2A9D8F}
+\definecolor{combined}{HTML}{7656B8}
+\definecolor{ppath}{HTML}{C13C78}
+\definecolor{spath}{HTML}{168C91}
+\definecolor{electric}{HTML}{E77C2F}
+\definecolor{control}{HTML}{4F5664}
+\definecolor{laserfill}{HTML}{FFF0BF}
+\definecolor{aomfill}{HTML}{FFD56A}
+\definecolor{fiberfill}{HTML}{D8E9F7}
+\definecolor{pbsfill}{HTML}{BFE5E8}
+\definecolor{bpdfill}{HTML}{F9DFC3}
+\definecolor{daqfill}{HTML}{F2C8B5}
+\definecolor{fpgafill}{HTML}{D8D8F4}
+\definecolor{circlight}{HTML}{A9D5EF}
+\definecolor{circdark}{HTML}{4B84BE}
+
+\tikzset{
+  >={Stealth[length=3.0mm,width=2.2mm]},
+  device/.style={
+    draw=ink,
+    line width=0.85pt,
+    rounded corners=2pt,
+    align=center,
+    font=\sffamily\fontsize{14}{16}\selectfont
+  },
+  labeltext/.style={
+    font=\sffamily\fontsize{13}{15}\selectfont,
+    text=ink
+  },
+  smalllabel/.style={
+    font=\sffamily\fontsize{11.5}{13}\selectfont,
+    text=ink
+  },
+  optic/.style={line width=2.3pt, line cap=round, line join=round, -{Stealth}},
+  fiber/.style={line width=2.1pt, line cap=round, line join=round},
+  electricline/.style={
+    draw=electric,
+    line width=1.7pt,
+    dash pattern=on 5pt off 3pt,
+    line cap=round,
+    -{Stealth}
+  },
+  controlline/.style={
+    draw=control,
+    line width=1.55pt,
+    dash pattern=on 5pt off 3pt,
+    line cap=round,
+    -{Stealth}
+  }
+}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \path[use as bounding box] (0,0) rectangle (25.2,13.0);
+  \fill[white] (0,0) rectangle (25.2,13.0);
+
+  % Main hardware blocks
+  \node[device,fill=laserfill,minimum width=2.35cm,minimum height=1.35cm] (laser) at (2.8,11.15) {Laser};
+  \node[device,fill=aomfill,minimum width=2.25cm,minimum height=1.45cm] (aom) at (7.4,11.15) {\begin{tabular}{c}80 MHz\\[-1mm]AOM\end{tabular}};
+  \node[device,fill=fiberfill,minimum width=2.65cm,minimum height=1.35cm] (probeFiber) at (15.6,11.15) {探测光纤};
+
+  \node[device,fill=pbsfill,minimum width=1.65cm,minimum height=1.25cm] (pbsU) at (14.5,8.10) {PBS};
+  \node[device,fill=pbsfill,minimum width=1.65cm,minimum height=1.25cm] (pbsL) at (14.5,5.65) {PBS};
+  \node[device,fill=bpdfill,minimum width=2.05cm,minimum height=1.25cm] (bpd1) at (19.35,8.10) {BPD1};
+  \node[device,fill=bpdfill,minimum width=2.05cm,minimum height=1.25cm] (bpd2) at (19.35,5.65) {BPD2};
+  \node[device,fill=daqfill,minimum width=1.55cm,minimum height=4.20cm] (daq) at (23.25,6.88) {DAQ};
+  \node[device,fill=fpgafill,minimum width=2.85cm,minimum height=1.35cm] (fpga) at (4.45,1.45) {FPGA};
+
+  % Laser aperture and pulse glyph
+  \fill[probe] ($(laser.east)+(-0.13,0)$) circle (0.07);
+  \foreach \dy in {-0.13,0,0.13}
+    \draw[probe,line width=0.65pt] ($(laser.east)+(0.03,\dy)$) -- ++(0.21,0);
+  \draw[reference,line width=1.8pt,line cap=round]
+    (4.25,11.30) -- (4.55,11.30) -- (4.55,11.90) -- (4.82,11.90) --
+    (4.82,11.30) -- (5.14,11.30);
+
+  % AOM acoustic-wave motif
+  \foreach \r in {0.13,0.22,0.31}
+    \draw[electric,line width=0.75pt] ($(aom.north east)+(-0.35,-0.30)$) arc[start angle=215,end angle=305,radius=\r];
+
+  % Optical circulator
+  \shade[ball color=circlight] (11.65,11.15) circle (0.62);
+  \draw[ink,line width=0.9pt] (11.65,11.15) circle (0.62);
+  \draw[ink,line width=1.7pt,-{Stealth[length=2.4mm,width=1.8mm]}]
+    (11.30,11.02) arc[start angle=205,end angle=510,radius=0.36];
+
+  % Probe/signal path
+  \draw[probehalo,line width=5.0pt,line cap=round] (laser.east) -- (aom.west);
+  \draw[probe,optic] (laser.east) -- (aom.west);
+  \draw[probehalo,line width=5.0pt,line cap=round] (aom.east) -- (11.03,11.15);
+  \draw[probe,optic] (aom.east) -- (11.03,11.15);
+  \draw[probehalo,line width=5.0pt,line cap=round] (12.27,11.15) -- (probeFiber.west);
+  \draw[probe,optic] (12.27,11.15) -- (probeFiber.west);
+
+  % Sensing fiber coil
+  \draw[reference,fiber] (probeFiber.east) -- (18.10,11.15);
+  \foreach \x in {18.20,18.47,18.74,19.01,19.28,19.55}
+    \draw[reference,line width=1.55pt] (\x,11.15) ellipse (0.30 and 0.67);
+  \draw[reference,fiber] (19.85,11.15) -- (21.55,11.15);
+
+  % Port labels
+  \node[smalllabel] at (10.75,10.72) {1};
+  \node[smalllabel] at (12.55,10.72) {2};
+  \node[smalllabel] at (12.15,9.72) {3};
+
+  % Reference and backscatter paths
+  \draw[reference,line width=4.8pt,opacity=0.16,line cap=round]
+    (laser.south) -- (2.80,7.05) -- (11.20,7.05);
+  \draw[reference,optic]
+    (laser.south) -- (2.80,7.05) -- (11.20,7.05);
+
+  \draw[scatter,line width=4.8pt,opacity=0.16,line cap=round]
+    (11.65,10.53) -- (11.65,7.55);
+  \draw[scatter,optic]
+    (11.65,10.53) -- (11.65,7.55);
+
+  % Combining node
+  \shade[ball color=circlight] (11.65,7.05) circle (0.28);
+  \draw[circdark,line width=0.8pt] (11.65,7.05) circle (0.28);
+
+  % Combined light to two PBS inputs
+  \draw[combined,line width=4.8pt,opacity=0.15,line cap=round]
+    (11.93,7.05) -- (13.10,7.05);
+  \draw[combined,optic] (11.93,7.05) -- (13.10,7.05);
+  \fill[combined] (13.10,7.05) circle (0.08);
+  \draw[combined,optic] (13.10,7.05) |- (pbsU.west);
+  \draw[combined,optic] (13.10,7.05) |- (pbsL.west);
+
+  % Polarization outputs with a white underlay at the deliberate crossing
+  \coordinate (uTop) at ($(pbsU.east)+(0,0.24)$);
+  \coordinate (uBot) at ($(pbsU.east)+(0,-0.24)$);
+  \coordinate (lTop) at ($(pbsL.east)+(0,0.24)$);
+  \coordinate (lBot) at ($(pbsL.east)+(0,-0.24)$);
+  \coordinate (b1Top) at ($(bpd1.west)+(0,0.24)$);
+  \coordinate (b1Bot) at ($(bpd1.west)+(0,-0.24)$);
+  \coordinate (b2Top) at ($(bpd2.west)+(0,0.24)$);
+  \coordinate (b2Bot) at ($(bpd2.west)+(0,-0.24)$);
+
+  \draw[white,line width=5.6pt,line cap=round] (uTop) -- (b1Top);
+  \draw[ppath,optic] (uTop) -- (b1Top);
+  \draw[white,line width=5.6pt,line cap=round] (lTop) -- (b1Bot);
+  \draw[ppath,optic] (lTop) -- (b1Bot);
+  \draw[white,line width=5.6pt,line cap=round] (uBot) -- (b2Top);
+  \draw[spath,optic] (uBot) -- (b2Top);
+  \draw[white,line width=5.6pt,line cap=round] (lBot) -- (b2Bot);
+  \draw[spath,optic] (lBot) -- (b2Bot);
+
+  % BPD acquisition outputs
+  \draw[electricline] (bpd1.east) -- ++(0.65,0) |- ($(daq.west)+(0,0.92)$);
+  \draw[electricline] (bpd2.east) -- ++(0.65,0) |- ($(daq.west)+(0,-0.92)$);
+
+  % DAQ and FPGA decoration
+  \foreach \yy in {-1.20,-0.92,-0.64}
+    \draw[white,line width=1.0pt] ($(daq.center)+(-0.46,\yy)$) -- ($(daq.center)+(0.46,\yy)$);
+  % DAQ-to-FPGA control line and separate synchronization loop
+  \draw[electric,line width=2.0pt,line cap=round,-{Stealth}]
+    (daq.south) -- (23.25,2.48) -- (5.88,2.48) -- (fpga.east);
+  \draw[controlline]
+    (fpga.east) -- (6.15,1.45) -- (6.15,0.72) -- (24.30,0.72) --
+    (24.30,4.25) -- ($(daq.south)+(0.35,0)$);
+
+  % FPGA modulation route
+  \draw[controlline]
+    (fpga.west) -- (0.72,1.45) -- (0.72,11.15) -- (laser.west);
+
+  % Labels
+  \node[labeltext,anchor=south west] at (0.72,12.00) {调制信号};
+  \node[labeltext] at (4.68,10.62) {信号光};
+  \node[labeltext,rotate=90] at (2.25,8.95) {参考光};
+  \node[labeltext,rotate=90] at (11.17,8.93) {散射光};
+  \node[labeltext,anchor=west] at (19.97,11.92) {待测光纤};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (15.94,8.57) {P+};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (16.68,7.57) {P$-$};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (16.04,5.12) {S+};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (16.70,6.58) {S$-$};
+  \node[labeltext] at (14.85,0.30) {同步触发信号};
+
+  % Small optical ports on illustrated modules
+  \fill[reference] (probeFiber.east) circle (0.06);
+  \fill[probe] (probeFiber.west) circle (0.06);
+  \fill[electric] ($(daq.west)+(0,0.92)$) circle (0.055);
+  \fill[electric] ($(daq.west)+(0,-0.92)$) circle (0.055);
+\end{tikzpicture}
+\end{document}
