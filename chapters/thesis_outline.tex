@@ -1,74 +1,55 @@
-% 当前唯一有效的论文目录框架
-% 正文固定为五章。JNUThesis 默认目录显示 chapter 和 section 两级标题。
-% 正式写作时按章拆分为 chap1.tex、chap2.tex 等文件。
+% 当前论文目录框架，与chap1.tex至chap5.tex保持同步。
+% JNUThesis默认目录只显示chapter和section两级标题。
 
 \chapter{绪论}
 \thispagestyle{main}
 
 \section{研究背景与意义}
-\section{分布式光纤振动传感与φ-OTDR研究现状}
-\section{DAS发射端光放大与脉冲形成技术研究现状}
-\section{DAS收发系统小型化与光电模组集成研究现状}
-\section{相干探测、偏振接收与数字解调研究现状}
-\section{AOM移频、射频门控与系统同步研究现状}
-\section{现有研究不足与本文拟解决问题}
+\section{φ-OTDR/DAS技术发展与研究现状}
+\section{EDFA与SOA在DAS发射链路中的应用}
+\section{传统分立式DAS与收发模组集成研究现状}
+\section{相干接收与数字解调研究现状}
 \section{本文主要研究内容与技术路线}
-\section{本文主要工作与创新点}
+\section{本文主要工作与贡献边界}
 \section{本章小结}
 
-\chapter{外差式φ-OTDR传感、LD--SOA与收发模组理论}
+\chapter{外差式φ-OTDR传感与信号解调原理}
 \thispagestyle{main}
 
 \section{引言}
-\section{φ-OTDR瑞利后向散射与分布式振动定位原理}
-\section{外差相干探测、AOM移频与平衡光电接收模型}
-\section{LD--SOA光源模块的增益、载流子与噪声特性}
-\section{SOA脉冲建立、关断负偏压、漏光与消光比}
-\section{SOA载流子--折射率耦合与瞬态频率变化}
-\section{DAS收发一体化光电模组的光路拓扑与链路模型}
-\section{SOA--AOM--DAQ协同门控与链路时延模型}
-\section{DAS数字下变频、相位提取与差分解调}
-\section{频率失配、偏振衰落与双偏振合成原理}
+\section{φ-OTDR分布式振动传感原理}
+\section{EDFA与SOA工作特性、性能差异及选型依据}
+\section{分光集成器件脉冲发射与AOM移频原理}
+\section{外差相干探测与数字相位解调原理}
 \section{本章小结}
 
-\chapter{无EDFA的LD--SOA发射链路、协同门控与DAS收发一体化光电模组}
+\chapter{基于分光集成器件的DAS收发一体化光电模组}
 \thispagestyle{main}
 
 \section{引言}
-\section{DAS系统总体架构与统一时序}
-\section{LD--SOA驱动及直流与脉冲工作特性}
-\section{SOA关断负偏压、漏光与消光比}
-\section{SOA增益、饱和、ASE与输出稳定性}
-\section{AOM移频支路与外差拍频特性}
-\section{SOA工作状态与拍频变化影响因素}
-\section{基于FPGA的SOA--AOM--DAQ预补偿协同门控}
-\section{三种AOM射频驱动方式的性能对比}
-\section{DAS收发一体化光电模组需求与总体方案}
-\section{模组光路拓扑、器件布局与接口设计}
-\section{模组封装、散热、屏蔽与装调}
-\section{模组链路损耗、隔离、串扰与通道一致性}
-\section{模组拍频质量、热稳定性与重复性}
-\section{分立式光路与一体化模组的光电及工程性能对比}
-\section{误差、局限与本章小结}
+\section{传统分立式DAS方案与本文方案的架构差异}
+\section{分光集成器件工作特性及其对拍频信号的影响}
+\section{SOA--AOM--DAQ协同门控方法}
+\section{DAS收发一体化光电模组设计与实现}
+\section{模组光电性能测试与分立式基线对比}
+\section{硬件稳定性、误差与适用边界}
+\section{本章小结}
 
-\chapter{基于收发一体化光电模组的DAS解调优化与振动性能验证}
+\chapter{基于收发一体化光电模组的DAS解调与系统性能验证}
 \thispagestyle{main}
 
 \section{引言}
-\section{基于收发模组的DAS实验系统与数据采集}
-\section{模组接收输出、BPD链路与噪声分析}
-\section{偏振态对双路拍频的影响及通道标定}
-\section{DAS数字解调流程与参数配置}
-\section{中心频率、空间合并、区域选择与滤波参数优化}
-\section{单偏振与常规双偏振合成对比}
-\section{PZT振动定位、频率与波形恢复}
-\section{分立式系统与集成模组的DAS端到端性能对比}
-\section{重复性、长期稳定性与不确定度}
+\section{DAS实验系统与数据采集}
+\section{双偏振接收信号与通道标定}
+\section{DAS数字解调流程与固定参数配置}
+\section{振动定位、频率与波形恢复}
+\section{端到端DAS传感性能评价}
+\section{测量重复性与长期稳定性分析}
 \section{本章小结}
 
 \chapter{总结与展望}
 \thispagestyle{main}
 
 \section{全文总结}
-\section{主要创新点}
+\section{主要工作与贡献}
 \section{研究不足与展望}

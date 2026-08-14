@@ -4,7 +4,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from matplotlib.patches import FancyArrowPatch, Rectangle
 from PIL import Image, ImageOps
 
 
@@ -83,18 +83,19 @@ def add_box(
     width: float,
     height: float,
     text: str,
-    face: str,
-    edge: str,
+    face: str = "white",
+    edge: str = "#222222",
     fontsize: float = 9.2,
     bold: bool = False,
+    linewidth: float = 1.0,
+    text_color: str = "#111111",
 ) -> None:
     x, y = xy
-    box = FancyBboxPatch(
+    box = Rectangle(
         (x, y),
         width,
         height,
-        boxstyle="round,pad=0.012,rounding_size=0.018",
-        linewidth=1.2,
+        linewidth=linewidth,
         edgecolor=edge,
         facecolor=face,
     )
@@ -107,8 +108,8 @@ def add_box(
         va="center",
         fontproperties=CN_BOLD if bold else CN,
         fontsize=fontsize,
-        color="#1f2933",
-        linespacing=1.35,
+        color=text_color,
+        linespacing=1.25,
     )
 
 
@@ -116,15 +117,15 @@ def add_arrow(
     ax: plt.Axes,
     start: tuple[float, float],
     end: tuple[float, float],
-    color: str = "#52606d",
-    width: float = 1.4,
+    color: str = "#333333",
+    width: float = 1.0,
 ) -> None:
     ax.add_patch(
         FancyArrowPatch(
             start,
             end,
             arrowstyle="-|>",
-            mutation_scale=12,
+            mutation_scale=10,
             linewidth=width,
             color=color,
             shrinkA=2,
@@ -135,134 +136,132 @@ def add_arrow(
 
 
 def draw_research_route() -> None:
-    colors = {
-        "blue": "#dceefb",
-        "blue_edge": "#2680a8",
-        "green": "#e3f9e5",
-        "green_edge": "#3f9142",
-        "amber": "#fff3c4",
-        "amber_edge": "#c99a2e",
-        "purple": "#eee6ff",
-        "purple_edge": "#7f5db7",
-        "gray": "#f0f4f8",
-        "gray_edge": "#627d98",
-    }
-    fig, ax = plt.subplots(figsize=(7.15, 5.15))
+    dark_blue = "#1f4e79"
+    light_blue = "#eaf1f7"
+    light_gray = "#f2f2f2"
+    mid_gray = "#d9d9d9"
+
+    fig, ax = plt.subplots(figsize=(7.15, 5.0))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    ax.text(
-        0.5,
-        0.965,
-        "本文研究技术路线",
-        ha="center",
-        va="center",
-        fontproperties=CN_BOLD,
-        fontsize=15,
-        color="#102a43",
+    # Overall objective.
+    add_box(
+        ax,
+        (0.12, 0.89),
+        0.76,
+        0.075,
+        "研究目标：外差式DAS收发系统的小型化、模块化与稳定运行",
+        dark_blue,
+        dark_blue,
+        fontsize=10.2,
+        bold=True,
+        linewidth=1.1,
+        text_color="white",
     )
 
-    # Research objects and questions.
+    add_arrow(ax, (0.5, 0.89), (0.5, 0.845))
+
+    # Theoretical basis.
     add_box(
         ax,
-        (0.06, 0.805),
-        0.40,
+        (0.08, 0.75),
+        0.84,
         0.095,
-        "集成 LD-SOA 发射链路\n驱动、脉冲与瞬态频率特性",
-        colors["blue"],
-        colors["blue_edge"],
-        bold=True,
-    )
-    add_box(
-        ax,
-        (0.54, 0.805),
-        0.40,
-        0.095,
-        "分立/集成 DAS 收发光路\n性能与工程一致性",
-        colors["blue"],
-        colors["blue_edge"],
+        "理论基础（第2章）\nφ-OTDR传感机理  |  DFB-LD/SOA工作特性  |  AOM移频与外差探测  |  数字相位解调",
+        light_gray,
+        "#444444",
+        fontsize=8.7,
         bold=True,
     )
 
-    # Unified theory in Chapter 2.
-    add_arrow(ax, (0.26, 0.805), (0.41, 0.744))
-    add_arrow(ax, (0.74, 0.805), (0.59, 0.744))
+    add_arrow(ax, (0.5, 0.75), (0.5, 0.725))
+
+    # Parallel hardware studies.
     add_box(
         ax,
-        (0.13, 0.655),
-        0.74,
-        0.09,
-        "第2章：统一理论模型\n瑞利散射与距离映射｜SOA 动态｜AOM 移频与外差探测｜I/Q、频偏与偏振",
-        colors["gray"],
-        colors["gray_edge"],
+        (0.08, 0.49),
+        0.40,
+        0.215,
+        "分光集成器件发射链路\n"
+        "内部集成：DFB-LD + SOA\n"
+        "驱动电流、光脉冲、消光比与ASE\n"
+        "外差拍频与SOA-AOM-DAQ协同门控",
+        "white",
+        dark_blue,
+        fontsize=8.6,
+        bold=True,
+        linewidth=1.2,
+    )
+    add_box(
+        ax,
+        (0.52, 0.49),
+        0.40,
+        0.215,
+        "DAS收发一体化光电模组\n"
+        "AOM、耦合器、环形器、PBS与BPD\n"
+        "光路拓扑、接口、封装与通道一致性\n"
+        "分立式基线与模组光电性能对比",
+        "white",
+        dark_blue,
+        fontsize=8.6,
+        bold=True,
+        linewidth=1.2,
+    )
+
+    ax.plot([0.28, 0.72], [0.725, 0.725], color="#333333", linewidth=1.0)
+    add_arrow(ax, (0.28, 0.725), (0.28, 0.705))
+    add_arrow(ax, (0.72, 0.725), (0.72, 0.705))
+
+    add_arrow(ax, (0.28, 0.49), (0.40, 0.445))
+    add_arrow(ax, (0.72, 0.49), (0.60, 0.445))
+
+    # Fixed processing and end-to-end validation.
+    add_box(
+        ax,
+        (0.12, 0.34),
+        0.76,
+        0.105,
+        "固定解调流程与端到端验证（第4章）\n双通道标定  →  数字下变频与I/Q提取  →  复共轭差分与双偏振合成  →  PZT振动恢复",
+        light_blue,
+        dark_blue,
+        fontsize=8.6,
+        bold=True,
+    )
+
+    add_arrow(ax, (0.5, 0.34), (0.5, 0.295))
+
+    # Evaluation metrics.
+    add_box(
+        ax,
+        (0.08, 0.20),
+        0.84,
+        0.095,
+        "性能评价\n光功率、消光比与ASE  |  拍频质量与噪声底  |  定位、频率及波形恢复  |  稳定性与工程指标",
+        light_gray,
+        "#444444",
+        fontsize=8.7,
+        bold=True,
+    )
+
+    add_arrow(ax, (0.5, 0.20), (0.5, 0.155))
+
+    add_box(
+        ax,
+        (0.12, 0.08),
+        0.76,
+        0.075,
+        "研究结论（第5章）：发射特性—光路集成—固定解调—传感验证",
+        mid_gray,
+        "#333333",
         fontsize=9.0,
         bold=True,
     )
 
-    # Chapter 3 and Chapter 4 branches.
-    add_arrow(ax, (0.39, 0.655), (0.27, 0.592))
-    add_arrow(ax, (0.61, 0.655), (0.73, 0.592))
-    add_box(
-        ax,
-        (0.055, 0.435),
-        0.42,
-        0.16,
-        "第3章：发射链路与收发集成光模组\n"
-        "• SOA 电流、脉宽、ASE 与拍频表征\n"
-        "• SOA-AOM-DAQ 协同门控\n"
-        "• 分立/集成等条件与各自优化比较",
-        colors["green"],
-        colors["green_edge"],
-        fontsize=8.7,
-        bold=True,
-    )
-    add_box(
-        ax,
-        (0.525, 0.435),
-        0.42,
-        0.16,
-        "第4章：接收与数字解调优化\n"
-        "• BPD/PBS 双通道校准与合成\n"
-        "• 中心频率、标距、区域与滤波配置\n"
-        "• PZT 定位、频率恢复与稳定性测试",
-        colors["purple"],
-        colors["purple_edge"],
-        fontsize=8.7,
-        bold=True,
-    )
-
-    # Verification and comparison.
-    add_arrow(ax, (0.265, 0.435), (0.39, 0.368))
-    add_arrow(ax, (0.735, 0.435), (0.61, 0.368))
-    add_box(
-        ax,
-        (0.12, 0.255),
-        0.76,
-        0.115,
-        "实验验证与综合评价\n"
-        "光脉冲/消光比/ASE/拍频｜噪声底/相位跳变/SNR｜频率与定位误差｜体积/接口/功耗/长期漂移",
-        colors["amber"],
-        colors["amber_edge"],
-        fontsize=8.9,
-        bold=True,
-    )
-    add_arrow(ax, (0.5, 0.255), (0.5, 0.188))
-    add_box(
-        ax,
-        (0.16, 0.095),
-        0.68,
-        0.095,
-        "第5章：形成“发射特性—光路集成—接收解调—传感验证”的证据链\n总结适用范围、局限与后续集成方向",
-        "#fde2e4",
-        "#b44c55",
-        fontsize=9.1,
-        bold=True,
-    )
-
-    fig.subplots_adjust(left=0.015, right=0.985, top=0.985, bottom=0.02)
-    fig.savefig(IMAGES / "chap1_research_route.pdf", bbox_inches="tight")
-    fig.savefig(IMAGES / "chap1_research_route.png", dpi=600, bbox_inches="tight")
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.99, bottom=0.01)
+    fig.savefig(IMAGES / "chap1_research_route.pdf", bbox_inches="tight", pad_inches=0.03)
+    fig.savefig(IMAGES / "chap1_research_route.png", dpi=600, bbox_inches="tight", pad_inches=0.03)
     plt.close(fig)
 
 

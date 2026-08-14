@@ -69,7 +69,7 @@
   \fill[white] (0,0) rectangle (25.2,13.0);
 
   % Main hardware blocks
-  \node[device,fill=laserfill,minimum width=2.35cm,minimum height=1.35cm] (laser) at (2.8,11.15) {Laser};
+  \node[device,fill=laserfill,minimum width=2.35cm,minimum height=1.35cm] (laser) at (2.8,11.15) {分光集成器件};
   \node[device,fill=aomfill,minimum width=2.25cm,minimum height=1.45cm] (aom) at (7.4,11.15) {\begin{tabular}{c}80 MHz\\[-1mm]AOM\end{tabular}};
   \node[device,fill=fiberfill,minimum width=2.65cm,minimum height=1.35cm] (probeFiber) at (15.6,11.15) {探测光纤};
 
@@ -80,7 +80,7 @@
   \node[device,fill=daqfill,minimum width=1.55cm,minimum height=4.20cm] (daq) at (23.25,6.88) {DAQ};
   \node[device,fill=fpgafill,minimum width=2.85cm,minimum height=1.35cm] (fpga) at (4.45,1.45) {FPGA};
 
-  % Laser aperture and pulse glyph
+  % Optical output aperture and pulse glyph
   \fill[probe] ($(laser.east)+(-0.13,0)$) circle (0.07);
   \foreach \dy in {-0.13,0,0.13}
     \draw[probe,line width=0.65pt] ($(laser.east)+(0.03,\dy)$) -- ++(0.21,0);
