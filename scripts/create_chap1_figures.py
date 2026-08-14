@@ -136,10 +136,8 @@ def add_arrow(
 
 
 def draw_research_route() -> None:
-    dark_blue = "#1f4e79"
-    light_blue = "#eaf1f7"
-    light_gray = "#f2f2f2"
-    mid_gray = "#d9d9d9"
+    line_color = "#333333"
+    no_fill = "white"
 
     fig, ax = plt.subplots(figsize=(7.15, 5.0))
     ax.set_xlim(0, 1)
@@ -153,12 +151,12 @@ def draw_research_route() -> None:
         0.76,
         0.075,
         "研究目标：外差式DAS收发系统的小型化、模块化与稳定运行",
-        dark_blue,
-        dark_blue,
+        no_fill,
+        line_color,
         fontsize=10.2,
         bold=True,
         linewidth=1.1,
-        text_color="white",
+        text_color="#111111",
     )
 
     add_arrow(ax, (0.5, 0.89), (0.5, 0.845))
@@ -170,8 +168,8 @@ def draw_research_route() -> None:
         0.84,
         0.095,
         "理论基础（第2章）\nφ-OTDR传感机理  |  DFB-LD/SOA工作特性  |  AOM移频与外差探测  |  数字相位解调",
-        light_gray,
-        "#444444",
+        no_fill,
+        line_color,
         fontsize=8.7,
         bold=True,
     )
@@ -189,7 +187,7 @@ def draw_research_route() -> None:
         "驱动电流、光脉冲、消光比与ASE\n"
         "外差拍频与SOA-AOM-DAQ协同门控",
         "white",
-        dark_blue,
+        line_color,
         fontsize=8.6,
         bold=True,
         linewidth=1.2,
@@ -204,7 +202,7 @@ def draw_research_route() -> None:
         "光路拓扑、接口、封装与通道一致性\n"
         "分立式基线与模组光电性能对比",
         "white",
-        dark_blue,
+        line_color,
         fontsize=8.6,
         bold=True,
         linewidth=1.2,
@@ -214,8 +212,10 @@ def draw_research_route() -> None:
     add_arrow(ax, (0.28, 0.725), (0.28, 0.705))
     add_arrow(ax, (0.72, 0.725), (0.72, 0.705))
 
-    add_arrow(ax, (0.28, 0.49), (0.40, 0.445))
-    add_arrow(ax, (0.72, 0.49), (0.60, 0.445))
+    ax.plot([0.28, 0.28], [0.49, 0.467], color=line_color, linewidth=1.0)
+    ax.plot([0.72, 0.72], [0.49, 0.467], color=line_color, linewidth=1.0)
+    ax.plot([0.28, 0.72], [0.467, 0.467], color=line_color, linewidth=1.0)
+    add_arrow(ax, (0.5, 0.467), (0.5, 0.445))
 
     # Fixed processing and end-to-end validation.
     add_box(
@@ -224,8 +224,8 @@ def draw_research_route() -> None:
         0.76,
         0.105,
         "固定解调流程与端到端验证（第4章）\n双通道标定  →  数字下变频与I/Q提取  →  复共轭差分与双偏振合成  →  PZT振动恢复",
-        light_blue,
-        dark_blue,
+        no_fill,
+        line_color,
         fontsize=8.6,
         bold=True,
     )
@@ -239,8 +239,8 @@ def draw_research_route() -> None:
         0.84,
         0.095,
         "性能评价\n光功率、消光比与ASE  |  拍频质量与噪声底  |  定位、频率及波形恢复  |  稳定性与工程指标",
-        light_gray,
-        "#444444",
+        no_fill,
+        line_color,
         fontsize=8.7,
         bold=True,
     )
@@ -253,8 +253,8 @@ def draw_research_route() -> None:
         0.76,
         0.075,
         "研究结论（第5章）：发射特性—光路集成—固定解调—传感验证",
-        mid_gray,
-        "#333333",
+        no_fill,
+        line_color,
         fontsize=9.0,
         bold=True,
     )
