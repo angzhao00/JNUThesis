@@ -3,8 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import font_manager
-from matplotlib.patches import FancyArrowPatch, Rectangle
+from matplotlib.patches import Circle, FancyArrowPatch, Rectangle
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -171,6 +172,94 @@ def draw_phi_otdr_principle() -> None:
     save(fig, "chap2_phi_otdr_principle")
 
 
+def draw_acoustic_phase_chain() -> None:
+    fig, ax = canvas((7.15, 3.45))
+
+    x_wave = np.linspace(0.035, 0.20, 180)
+    y_wave = 0.70 + 0.085 * np.sin(np.linspace(0, 5 * np.pi, x_wave.size))
+    ax.plot(x_wave, y_wave, color=RED, linewidth=2.0)
+    text(ax, (0.115, 0.86), "声压/振动", fontsize=8.2, color=RED, bold=True)
+    arrow(ax, (0.20, 0.70), (0.27, 0.70), color=RED)
+
+    box(ax, (0.27, 0.58), 0.20, 0.24, "传感光纤局部变形\n轴向应变 $\\varepsilon_z$\n径向应变 $\\varepsilon_r$", face=LIGHT_BLUE, edge=BLUE, bold=True, fontsize=7.7)
+    arrow(ax, (0.47, 0.70), (0.55, 0.70), color=BLUE)
+    box(ax, (0.55, 0.58), 0.18, 0.24, "几何效应\n$\\Delta L=L\\varepsilon_z$", face=LIGHT_ORANGE, edge=ORANGE, bold=True, fontsize=7.8)
+    box(ax, (0.55, 0.25), 0.18, 0.24, "光弹效应\n$\\Delta n_{\\rm eff}$", face=LIGHT_GREEN, edge=GREEN, bold=True, fontsize=7.8)
+    arrow(ax, (0.47, 0.62), (0.55, 0.37), color=GREEN, connection="arc3,rad=-0.05")
+
+    box(ax, (0.81, 0.45), 0.16, 0.27, "光程变化\n$\\Delta(n_{\\rm eff}L)$\n\n往返相位变化\n$\\Delta\\phi$", face=LIGHT_PURPLE, edge=PURPLE, bold=True, fontsize=7.7)
+    arrow(ax, (0.73, 0.70), (0.81, 0.64), color=ORANGE)
+    arrow(ax, (0.73, 0.37), (0.81, 0.53), color=GREEN)
+
+    box(ax, (0.07, 0.18), 0.36, 0.20, "等效轴向模型\n$\\Delta\\phi=4\\pi n_{\\rm eff}L_g(1-p_e)\\varepsilon/\\lambda_0$", face=LIGHT_GRAY, edge=INK, fontsize=7.7, bold=True)
+    arrow(ax, (0.89, 0.45), (0.43, 0.22), color=PURPLE, connection="angle,angleA=-90,angleB=180")
+    text(ax, (0.50, 0.075), "单一相位观测量对应标距内的等效平均应变；若无附加边界条件，不能独立反演轴向与径向应变。", fontsize=7.4)
+    save(fig, "chap2_acoustic_phase_chain")
+
+
+def draw_detection_schemes() -> None:
+    fig, ax = canvas((7.15, 4.55))
+
+    rows = [
+        (0.71, "（a）传统OTDR", [
+            ("低相干\n脉冲光源", LIGHT_BLUE, BLUE),
+            ("环形器与\n传感光纤", LIGHT_GREEN, GREEN),
+            ("直接光电\n功率探测", LIGHT_ORANGE, ORANGE),
+            ("损耗/断点\n距离曲线", LIGHT_GRAY, INK),
+        ], "非相干功率叠加，主要表征静态链路"),
+        (0.40, "（b）直接探测型φ-OTDR", [
+            ("窄线宽\n脉冲光源", LIGHT_BLUE, BLUE),
+            ("相干瑞利\n后向散射", LIGHT_GREEN, GREEN),
+            ("单路PD\n强度采样", LIGHT_ORANGE, ORANGE),
+            ("强度变化\n定位/识别", LIGHT_RED, RED),
+        ], "结构简单，但强度与应变通常不呈稳定线性关系"),
+        (0.09, "（c）外差相干型φ-OTDR", [
+            ("窄线宽光源\n分为信号/本振", LIGHT_BLUE, BLUE),
+            ("AOM移频与\n瑞利回波", LIGHT_GREEN, GREEN),
+            ("2×2耦合器\n与BPD", LIGHT_ORANGE, ORANGE),
+            ("I/Q解调\n差分相位", LIGHT_PURPLE, PURPLE),
+        ], "引入本振获得拍频复包络，适合定量相位解调"),
+    ]
+    for y, title, blocks, note in rows:
+        box(ax, (0.015, y - 0.03), 0.97, 0.26, "", face="white", edge="#C7CDD3", linewidth=0.8, zorder=0)
+        text(ax, (0.035, y + 0.185), title, fontsize=8.1, bold=True, ha="left")
+        x_values = [0.06, 0.30, 0.54, 0.78]
+        for index, ((label, face, edge), x) in enumerate(zip(blocks, x_values)):
+            box(ax, (x, y + 0.045), 0.16, 0.115, label, face=face, edge=edge, bold=True, fontsize=6.9)
+            if index < len(blocks) - 1:
+                arrow(ax, (x + 0.16, y + 0.102), (x_values[index + 1], y + 0.102), width=1.0)
+        text(ax, (0.50, y), note, fontsize=6.8, color=GRAY)
+    save(fig, "chap2_detection_schemes")
+
+
+def draw_fading_mechanisms() -> None:
+    fig, ax = canvas((7.15, 3.75))
+
+    box(ax, (0.02, 0.08), 0.46, 0.84, "", face="white", edge="#C7CDD3", linewidth=0.8, zorder=0)
+    text(ax, (0.04, 0.87), "（a）瑞利干涉衰落", fontsize=8.4, bold=True, ha="left")
+    center = np.array([0.24, 0.47])
+    vectors = [(0.13, 0.07, BLUE), (-0.10, 0.10, GREEN), (-0.08, -0.12, ORANGE), (0.07, -0.08, RED)]
+    for dx, dy, color in vectors:
+        arrow(ax, tuple(center), tuple(center + np.array([dx, dy])), color=color, width=1.5)
+    ax.add_patch(Circle(tuple(center), 0.018, facecolor=INK, edgecolor=INK, zorder=5))
+    arrow(ax, (0.24, 0.47), (0.275, 0.455), color=PURPLE, width=2.2)
+    text(ax, (0.24, 0.69), "分辨单元内随机散射相量", fontsize=7.3, color=GRAY)
+    text(ax, (0.25, 0.25), "矢量近似抵消\n$|S|\\rightarrow0$，相位方差急剧增大", fontsize=7.5, color=PURPLE, bold=True)
+
+    box(ax, (0.52, 0.08), 0.46, 0.84, "", face="white", edge="#C7CDD3", linewidth=0.8, zorder=0)
+    text(ax, (0.54, 0.87), "（b）偏振衰落", fontsize=8.4, bold=True, ha="left")
+    origin = (0.72, 0.45)
+    arrow(ax, origin, (0.72, 0.72), color=BLUE, width=2.2)
+    arrow(ax, origin, (0.91, 0.46), color=RED, width=2.2)
+    text(ax, (0.70, 0.75), "本振偏振 $\\mathbf{e}_{LO}$", fontsize=7.2, color=BLUE)
+    text(ax, (0.88, 0.40), "回波偏振 $\\mathbf{e}_s$", fontsize=7.2, color=RED)
+    ax.add_patch(Circle(origin, 0.018, facecolor=INK, edgecolor=INK, zorder=5))
+    text(ax, (0.75, 0.26), "$|\\mathbf{e}_{LO}^{H}\\mathbf{e}_s|\\rightarrow0$\n拍频幅度下降", fontsize=7.6, color=PURPLE, bold=True)
+    box(ax, (0.57, 0.12), 0.36, 0.09, "PBS双偏振接收提供互补观测", face=LIGHT_GREEN, edge=GREEN, fontsize=7.0, bold=True)
+    text(ax, (0.50, 0.025), "两类衰落均表现为局部低幅值，但起因不同：前者来自随机相量抵消，后者来自信号光与本振光偏振失配。", fontsize=7.2)
+    save(fig, "chap2_fading_mechanisms")
+
+
 def draw_soa_coupling_chain() -> None:
     fig, ax = canvas((7.15, 3.35))
     labels = [
@@ -200,15 +289,15 @@ def draw_soa_coupling_chain() -> None:
         linestyle="--",
         zorder=1,
     )
-    text(ax, (0.50, 0.90), "候选物理传递链：用于提出可检验假设，不直接替代实验归因", fontsize=8.0, color=GRAY, bold=True)
+    text(ax, (0.50, 0.90), "SOA载流子-折射率耦合的物理传递链与实验验证框架", fontsize=8.0, color=GRAY, bold=True)
 
     box(ax, (0.05, 0.20), 0.24, 0.17, "受控变量\n电流、脉宽、温度、输入功率", face=LIGHT_ORANGE, edge=ORANGE, fontsize=7.6)
-    box(ax, (0.38, 0.20), 0.24, 0.17, "排他性对照\n固定AOM、改变时延、暗态与断光", face=LIGHT_BLUE, edge=BLUE, fontsize=7.6)
+    box(ax, (0.38, 0.20), 0.24, 0.17, "机理辨识对照\n固定AOM、改变时延、暗态与断光", face=LIGHT_BLUE, edge=BLUE, fontsize=7.6)
     box(ax, (0.71, 0.20), 0.24, 0.17, "分层观测\n电脉冲、光脉冲、光谱、拍频与相位", face=LIGHT_GREEN, edge=GREEN, fontsize=7.6)
     arrow(ax, (0.17, 0.37), (0.09, 0.60), color=ORANGE, linestyle="--")
     arrow(ax, (0.50, 0.37), (0.58, 0.60), color=BLUE, linestyle="--")
     arrow(ax, (0.83, 0.37), (0.91, 0.60), color=GREEN, linestyle="--")
-    text(ax, (0.50, 0.08), "只有候选链条与多层观测在受控实验中一致，才能提高机理结论的证据强度。", fontsize=7.8)
+    text(ax, (0.50, 0.08), "受控变量、机理辨识对照与分层观测共同建立SOA驱动和拍频相位响应之间的实验对应关系。", fontsize=7.8)
     save(fig, "chap2_soa_coupling_chain")
 
 
@@ -238,7 +327,7 @@ def draw_demodulation_flow() -> None:
         text(ax, (x + 0.018, 0.48), str(index + 5), fontsize=8.0, color=edge, bold=True)
         if index < len(bottom) - 1:
             arrow(ax, (x, 0.355), (bottom[index + 1][0] + width, 0.355))
-    text(ax, (0.50, 0.10), "第4章采用统一的解调流程和参数配置评价定位、频率与波形恢复结果。", fontsize=8.1, bold=True)
+    text(ax, (0.50, 0.10), "该流程统一了原始拍频信号至差分相位的数据处理步骤。", fontsize=8.1, bold=True)
     save(fig, "chap2_fixed_demodulation_flow")
 
 
@@ -265,51 +354,40 @@ def architecture_row(
 
 
 def draw_traditional_proposed_architectures() -> None:
-    fig, ax = canvas((7.15, 4.6))
+    fig, ax = canvas((7.15, 2.05))
 
     # Traditional topology: a single-output laser is split into signal and
     # reference branches, with external pulse modulation and EDFA amplification.
-    box(ax, (0.02, 0.54), 0.96, 0.40, "", face="white", edge=GRAY, linewidth=1.0, zorder=0)
-    text(ax, (0.04, 0.91), "（a）传统EDFA分立光路", fontsize=8.4, bold=True, ha="left")
-    box(ax, (0.04, 0.76), 0.11, 0.09, "窄线宽\n激光器", face=LIGHT_BLUE, edge=BLUE, fontsize=6.9, bold=True)
-    box(ax, (0.18, 0.76), 0.08, 0.09, "分光器", face=LIGHT_PURPLE, edge=PURPLE, fontsize=6.9, bold=True)
-    box(ax, (0.31, 0.79), 0.12, 0.09, "外部脉冲调制\n与AOM移频", face=LIGHT_ORANGE, edge=ORANGE, fontsize=6.5, bold=True)
-    box(ax, (0.47, 0.79), 0.09, 0.09, "EDFA", face=LIGHT_RED, edge=RED, fontsize=7.1, bold=True)
-    box(ax, (0.60, 0.79), 0.10, 0.09, "环形器", face=LIGHT_GREEN, edge=GREEN, fontsize=6.9, bold=True)
-    box(ax, (0.75, 0.79), 0.13, 0.09, "传感光纤", face=LIGHT_GREEN, edge=GREEN, fontsize=6.9, bold=True)
-    box(ax, (0.58, 0.60), 0.12, 0.09, "2×2耦合器", face=LIGHT_PURPLE, edge=PURPLE, fontsize=6.7, bold=True)
-    box(ax, (0.76, 0.60), 0.12, 0.09, "PBS与双路BPD", face=LIGHT_GREEN, edge=GREEN, fontsize=6.4, bold=True)
-    arrow(ax, (0.15, 0.805), (0.18, 0.805), color=BLUE)
-    arrow(ax, (0.26, 0.805), (0.31, 0.835), color=RED)
-    arrow(ax, (0.43, 0.835), (0.47, 0.835), color=RED)
-    arrow(ax, (0.56, 0.835), (0.60, 0.835), color=RED)
-    arrow(ax, (0.70, 0.835), (0.75, 0.835), color=RED)
-    arrow(ax, (0.22, 0.76), (0.58, 0.645), color=BLUE, connection="angle3,angleA=-90,angleB=180")
-    arrow(ax, (0.815, 0.79), (0.70, 0.645), color=GREEN, connection="angle3,angleA=-90,angleB=0")
-    arrow(ax, (0.70, 0.645), (0.76, 0.645), color=PURPLE)
-    text(ax, (0.38, 0.735), "参考光", fontsize=6.5, color=BLUE)
-    text(ax, (0.79, 0.735), "瑞利回波", fontsize=6.5, color=GREEN)
-    text(ax, (0.50, 0.565), "外部调制器形成脉冲，EDFA仅承担光功率放大。", fontsize=6.9, color=GRAY)
+    # The panel content (originally occupying y in [0.54, 0.94] of a 4.6-in
+    # canvas) is scaled to fill the new, shorter canvas so that no empty
+    # margin remains below the schematic.
+    def y(v: float) -> float:
+        return 0.05 + (v - 0.54) * 2.25
 
-    # Proposed topology: the two device ports directly provide the signal and
-    # reference branches, so no external EDFA is used.
-    box(ax, (0.02, 0.05), 0.96, 0.40, "", face="white", edge=BLUE, linewidth=1.1, zorder=0)
-    text(ax, (0.04, 0.42), "（b）本文双输出ECL--SOA光路", fontsize=8.4, bold=True, ha="left")
-    box(ax, (0.04, 0.20), 0.14, 0.14, "双输出\nECL--SOA", face=LIGHT_BLUE, edge=BLUE, fontsize=7.0, bold=True)
-    box(ax, (0.31, 0.29), 0.11, 0.09, "AOM移频", face=LIGHT_ORANGE, edge=ORANGE, fontsize=6.9, bold=True)
-    box(ax, (0.47, 0.29), 0.10, 0.09, "环形器", face=LIGHT_GREEN, edge=GREEN, fontsize=6.9, bold=True)
-    box(ax, (0.62, 0.29), 0.13, 0.09, "传感光纤", face=LIGHT_GREEN, edge=GREEN, fontsize=6.9, bold=True)
-    box(ax, (0.56, 0.11), 0.13, 0.09, "2×2耦合器", face=LIGHT_PURPLE, edge=PURPLE, fontsize=6.7, bold=True)
-    box(ax, (0.76, 0.11), 0.12, 0.09, "PBS与双路BPD", face=LIGHT_GREEN, edge=GREEN, fontsize=6.4, bold=True)
-    arrow(ax, (0.18, 0.305), (0.31, 0.335), color=RED)
-    arrow(ax, (0.42, 0.335), (0.47, 0.335), color=RED)
-    arrow(ax, (0.57, 0.335), (0.62, 0.335), color=RED)
-    arrow(ax, (0.18, 0.235), (0.56, 0.155), color=BLUE, connection="angle3,angleA=-90,angleB=180")
-    arrow(ax, (0.685, 0.29), (0.69, 0.155), color=GREEN, connection="angle3,angleA=-90,angleB=0")
-    arrow(ax, (0.69, 0.155), (0.76, 0.155), color=PURPLE)
-    text(ax, (0.235, 0.345), "SOA端脉冲信号光", fontsize=6.4, color=RED)
-    text(ax, (0.35, 0.185), "LD端连续参考光", fontsize=6.4, color=BLUE)
-    text(ax, (0.50, 0.075), "SOA完成放大与电流门控，发射链路不配置EDFA。", fontsize=6.9, color=GRAY)
+    def h(v: float) -> float:
+        return v * 2.25
+
+    box(ax, (0.02, y(0.54)), 0.96, h(0.40), "", face="white", edge=GRAY, linewidth=1.0, zorder=0)
+    text(ax, (0.04, y(0.91)), "传统EDFA分立光路", fontsize=8.4, bold=True, ha="left")
+    box(ax, (0.04, y(0.76)), 0.11, h(0.09), "窄线宽\n激光器", face=LIGHT_BLUE, edge=BLUE, fontsize=6.9, bold=True)
+    box(ax, (0.18, y(0.76)), 0.08, h(0.09), "分光器", face=LIGHT_PURPLE, edge=PURPLE, fontsize=6.9, bold=True)
+    box(ax, (0.31, y(0.79)), 0.12, h(0.09), "外部脉冲调制\n与AOM移频", face=LIGHT_ORANGE, edge=ORANGE, fontsize=6.5, bold=True)
+    box(ax, (0.47, y(0.79)), 0.09, h(0.09), "EDFA", face=LIGHT_RED, edge=RED, fontsize=7.1, bold=True)
+    box(ax, (0.60, y(0.79)), 0.10, h(0.09), "环形器", face=LIGHT_GREEN, edge=GREEN, fontsize=6.9, bold=True)
+    box(ax, (0.75, y(0.79)), 0.13, h(0.09), "传感光纤", face=LIGHT_GREEN, edge=GREEN, fontsize=6.9, bold=True)
+    box(ax, (0.58, y(0.60)), 0.12, h(0.09), "2×2耦合器", face=LIGHT_PURPLE, edge=PURPLE, fontsize=6.7, bold=True)
+    box(ax, (0.76, y(0.60)), 0.12, h(0.09), "PBS与双路BPD", face=LIGHT_GREEN, edge=GREEN, fontsize=6.4, bold=True)
+    arrow(ax, (0.15, y(0.805)), (0.18, y(0.805)), color=BLUE)
+    arrow(ax, (0.26, y(0.805)), (0.31, y(0.835)), color=RED)
+    arrow(ax, (0.43, y(0.835)), (0.47, y(0.835)), color=RED)
+    arrow(ax, (0.56, y(0.835)), (0.60, y(0.835)), color=RED)
+    arrow(ax, (0.70, y(0.835)), (0.75, y(0.835)), color=RED)
+    arrow(ax, (0.22, y(0.76)), (0.58, y(0.645)), color=BLUE, connection="angle3,angleA=-90,angleB=180")
+    arrow(ax, (0.815, y(0.79)), (0.70, y(0.645)), color=GREEN, connection="angle3,angleA=-90,angleB=0")
+    arrow(ax, (0.70, y(0.645)), (0.76, y(0.645)), color=PURPLE)
+    text(ax, (0.38, y(0.735)), "参考光", fontsize=6.5, color=BLUE)
+    text(ax, (0.79, y(0.735)), "瑞利回波", fontsize=6.5, color=GREEN)
+    text(ax, (0.50, y(0.565)), "外部调制器形成脉冲，EDFA仅承担光功率放大。", fontsize=6.9, color=GRAY)
 
     save(fig, "chap3_traditional_proposed_architectures")
 
@@ -397,7 +475,10 @@ def draw_timing_comparison() -> None:
 
 def main() -> None:
     IMAGES.mkdir(parents=True, exist_ok=True)
+    draw_acoustic_phase_chain()
+    draw_detection_schemes()
     draw_phi_otdr_principle()
+    draw_fading_mechanisms()
     draw_soa_coupling_chain()
     draw_demodulation_flow()
     draw_traditional_proposed_architectures()

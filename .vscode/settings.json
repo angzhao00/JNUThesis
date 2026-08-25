@@ -4,6 +4,12 @@
   "latex-workshop.latex.autoBuild.run": "onSave",
   "latex-workshop.view.pdf.viewer": "tab",
   "latex-workshop.latex.outDir": "%DIR%/build",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "JNUThesis.tex": "gbt7714-2015.bst",
+    "README.md": ".gitignore"
+  },
   "latex-workshop.latex.recipes": [
     {
       "name": "latexmk (xelatex)",
@@ -15,7 +21,7 @@
   "latex-workshop.latex.tools": [
     {
       "name": "latexmk-xelatex",
-      "command": "latexmk",
+      "command": "C:/texlive/2026/bin/windows/latexmk.exe",
       "args": [
         "-synctex=1",
         "-interaction=nonstopmode",

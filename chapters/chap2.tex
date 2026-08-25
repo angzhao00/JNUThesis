@@ -2,11 +2,67 @@
 
 \section{引言}
 
-本章建立第三章发射链路与DAS一体化收发模组实验、第四章数字相位解调与系统验证所需的统一物理模型和信号模型。主要内容包括相干瑞利后向散射、距离--时间映射、空间分辨率与标距、EDFA与SOA工作特性、集成SOA的ECL激光器的增益与相位动态、AOM移频与动态响应、外差平衡探测、数字下变频、差分相位以及偏振衰落。DAS一体化收发模组的器件布局、封装和接口将在第三章结合系统实现进行讨论。
+本章建立第三章发射链路与DAS一体化收发模组实验、第四章数字相位解调与系统验证所需的统一物理模型和信号模型。首先从声波引起的光纤形变出发，说明几何效应和光弹效应如何共同调制传播相位；继而讨论瑞利散射、传统OTDR、相位敏感型OTDR（phase-sensitive optical time-domain reflectometry，φ-OTDR）、距离--时间映射、探测方案、性能指标与信号衰落。在此基础上，进一步建立EDFA与SOA工作特性、集成SOA的ECL激光器增益与相位动态、AOM移频、外差平衡探测、数字下变频、差分相位和双偏振接收模型。DAS一体化收发模组的器件布局、封装和接口将在第三章结合系统实现进行讨论。
 
 本章通过SOA载流子—折射率耦合模型描述动态相位和瞬时频率变化的物理途径。第三章将结合电流、脉宽、温度、输入功率、光路延迟、AOM支路和断光对照实验，辨识本文系统中拍频变化的主导机制。
 
 \section{φ-OTDR分布式振动传感原理}
+
+\subsection{外界声波对光纤相位的调制}
+
+声波在介质中表现为随时间和空间传播的压力扰动。标准传感光纤由纤芯、包层和外部涂覆层构成，纤芯与包层的折射率差将光场约束在导模中。传感光缆与被测对象或周围介质发生机械耦合后，声压引起的位移、拉伸和压缩传递至纤芯，使光纤长度、横向尺寸和有效折射率发生变化。对真空波长为$\lambda_0$的单色光，长度为$L$的光纤所产生的单程传播相位为
+
+\begin{equation}
+\phi=\beta L=\frac{2\pi}{\lambda_0}n_{\mathrm{eff}}L,
+\label{eq:propagation_phase}
+\end{equation}
+
+其中，$\beta$为传播常数，$n_{\mathrm{eff}}$为导模有效折射率。在光源频率固定且扰动量较小时，对式\eqref{eq:propagation_phase}作一阶微分可得
+
+\begin{equation}
+\delta\phi
+=
+\frac{2\pi}{\lambda_0}
+\left(
+n_{\mathrm{eff}}\,\delta L
++L\,\delta n_{\mathrm{eff}}
+\right).
+\label{eq:phase_total_differential}
+\end{equation}
+
+式\eqref{eq:phase_total_differential}中的第一项为几何长度变化产生的相位变化，第二项为应力光学效应产生的折射率变化。若轴向应变为$\varepsilon_z$，则$\delta L=L\varepsilon_z$。对于各向同性石英光纤，在单轴应变和泊松收缩近似下，可将光弹张量的作用归并为等效光弹系数
+
+\begin{equation}
+p_e
+=
+\frac{n_{\mathrm{eff}}^2}{2}
+\left[
+p_{12}-\nu\left(p_{11}+p_{12}\right)
+\right],
+\qquad
+\frac{\delta n_{\mathrm{eff}}}{n_{\mathrm{eff}}}
+\approx-p_e\varepsilon_z,
+\label{eq:effective_photoelastic}
+\end{equation}
+
+其中，$p_{11}$、$p_{12}$为光弹张量系数，$\nu$为泊松比。对于φ-OTDR中的往返传播以及长度为$L_g$的标距，最终得到的等效差分相位与标距内平均轴向应变近似呈线性关系，即
+
+\begin{equation}
+\Delta\phi_\varepsilon(t)
+=
+\frac{4\pi n_{\mathrm{eff}}L_g}{\lambda_0}
+\left(1-p_e\right)\bar{\varepsilon}(t).
+\label{eq:acoustic_strain_phase}
+\end{equation}
+
+声波、光纤形变、光程和往返相位之间的传递关系如图\ref{fig:chap2_acoustic_phase_chain}所示。实际光缆的护套、铠装层、耦合介质和安装方式会改变声压到纤芯应变的传递函数，因此式\eqref{eq:acoustic_strain_phase}给出的是光纤内部的等效应变--相位关系，而不是脱离封装条件的声压灵敏度。另一方面，单一相位观测量不足以同时独立反演轴向应变与径向应变；只有引入泊松关系、边界条件或多分量观测后，才可进一步区分不同方向的应变分量\cite{posey2000strain,liokumovich2015fundamentals,bhatta2019dynamic}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{images/chap2_acoustic_phase_chain.pdf}
+  \caption{声波扰动经几何效应与光弹效应转换为光相位变化的过程}
+  \label{fig:chap2_acoustic_phase_chain}
+\end{figure}
 
 \subsection{相干瑞利后向散射与距离映射}
 
@@ -28,6 +84,40 @@ j\left[
 \end{equation}
 
 其中，$a_k$和$\theta_k$分别为第$k$个等效散射中心的幅度和随机初相，$\omega_0$为光载波角频率，$\beta$为传播常数，$z_k$为散射位置。式\eqref{eq:rayleigh_sum}表明，同一空间分辨单元内的回波由大量随机散射光场相干叠加，其幅度和相位均随空间位置呈现散斑特征\cite{posey2000strain,liokumovich2015fundamentals,he2021review,liu2022advances,liu2025rayleigh_thesis}。
+
+光纤散射按散射前后光频率是否改变可分为弹性散射和非弹性散射。瑞利散射属于弹性散射，其散射光频率与入射光基本相同，因而适合保留并承载入射光的相位信息；拉曼散射和布里渊散射属于非弹性散射，频谱相对入射光发生偏移。φ-OTDR利用耦合回反向导模的瑞利散射分量，而不是把所有方向的散射功率均作为可接收信号。
+
+当一个分辨单元内包含足够多且相互独立的随机散射中心时，合成复场的同相与正交分量可近似视为零均值高斯变量。于是场幅值$A=|E_{\mathrm R}|$近似服从瑞利分布，光强$I=A^2$近似服从指数分布，相位$\Theta$在$[-\pi,\pi)$内近似均匀分布：
+
+\begin{align}
+p_A(a)&=\frac{a}{\sigma_R^2}\exp\!\left(-\frac{a^2}{2\sigma_R^2}\right),\quad a\geq0,\label{eq:rayleigh_amplitude_pdf}\\
+p_I(i)&=\frac{1}{\bar I}\exp\!\left(-\frac{i}{\bar I}\right),\quad i\geq0,\label{eq:rayleigh_intensity_pdf}\\
+p_\Theta(\theta)&=\frac{1}{2\pi},\quad -\pi\leq\theta<\pi.
+\label{eq:rayleigh_phase_pdf}
+\end{align}
+
+上述统计关系解释了φ-OTDR原始曲线沿距离呈现随机起伏而非平滑衰减的原因。需要特别区分的是，服从瑞利分布的是合成场幅值，而强度服从指数分布；当随机相量近似抵消时，局部幅值可接近零并形成瑞利干涉衰落。
+
+若光纤功率衰减系数为$\alpha(z)$，前向传播功率满足
+
+\begin{equation}
+P(z)=P_0\exp\!\left[-\int_0^z\alpha(u)\,\mathrm du\right],
+\qquad
+\alpha_{\mathrm{dB}}=\frac{10}{\ln 10}\alpha\approx4.343\alpha,
+\label{eq:fiber_power_attenuation}
+\end{equation}
+
+其中，第二个关系适用于$\alpha$按单位长度的自然对数功率衰减定义且沿程均匀的情形。设$\gamma_b(z)$为单位长度耦合回接收导模的等效后向瑞利功率系数，脉冲在距离维覆盖的单程等效长度为$\ell_p=v_g\tau_p/2$，则忽略器件插损和探测器响应时，传统OTDR在距离$z$附近接收的平均后向散射功率量级可写为
+
+\begin{equation}
+P_b(z)
+\approx
+P_0\,\gamma_b(z)\ell_p
+\exp\!\left[-2\int_0^z\alpha(u)\,\mathrm du\right].
+\label{eq:otdr_backscatter_power}
+\end{equation}
+
+指数项中的系数2来自前向与返回的双程损耗。式\eqref{eq:otdr_backscatter_power}用于说明脉冲能量、后向散射系数和双程衰减的关系；φ-OTDR的瞬时回波还叠加了式\eqref{eq:rayleigh_sum}所描述的相干散斑，不能仅用平均功率曲线代替复场模型。
 
 设光脉冲发出后经过时间$t$被接收，若光纤群折射率为$n_g$，则回波位置近似为
 
@@ -54,6 +144,21 @@ $\Delta z_s$是距离采样间隔，并不必然等于系统空间分辨率。�
   \label{fig:chap2_phi_otdr_principle}
 \end{figure}
 
+\subsection{传统OTDR、φ-OTDR及其探测方案}
+
+按扫描变量和定位方式，分布式反射测量可概括为时域反射与频域反射两类。OTDR发射脉冲并依据往返时间定位，适合公里级长距离动态测量；光频域反射计（optical frequency-domain reflectometry，OFDR）通常扫描光频并由拍频或傅里叶变换恢复距离信息，具有较高空间分辨能力，但测距、扫频线性度和动态刷新率受到不同约束。本文研究对象为面向动态振动测量的φ-OTDR，后续模型均采用时域脉冲和慢时间采样框架。
+
+传统OTDR、直接探测型φ-OTDR与本文采用的外差相干型φ-OTDR的信号链如图\ref{fig:chap2_detection_schemes}所示。传统OTDR采用低相干光源时，同一脉冲覆盖范围内的回波主要按功率叠加，所得平滑衰减曲线适合检测光纤长度、损耗、熔接点和断点。φ-OTDR改用窄线宽光源，使局部散射光场发生稳定的相干叠加；外界扰动改变散射相量间的相对相位，进而使回波强度和复相位随慢时间变化\cite{lu2010distributed,masoudi2016review,he2021review}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{images/chap2_detection_schemes.pdf}
+  \caption{传统OTDR、直接探测型与外差相干型φ-OTDR的信号链对比}
+  \label{fig:chap2_detection_schemes}
+\end{figure}
+
+根据接收方式，φ-OTDR可进一步分为直接探测、自外差探测和外部本振相干探测。直接探测使用单路光电探测器记录$|E_{\mathrm R}|^2$，结构简单，可利用相邻帧差分或统计量进行扰动定位；然而随机散斑工作点使强度变化与应变一般不保持稳定的线性关系，因此不宜仅凭单点强度定量恢复应变。自外差方案可向光纤注入具有时间间隔和频率差的双脉冲，使两脉冲对应的瑞利回波在探测器上形成拍频，拍频相位反映由脉冲间隔确定的空间区间相位差。外部本振相干探测则将同源连续光作为本振，与返回的瑞利信号光在耦合器和BPD中拍频，通过I/Q解调获得复包络，既利用本振提高弱回波的可检测性，又能在数字域灵活选择差分标距。本文采用最后一种方案，并在本章后半部分给出其完整模型。
+
 \subsection{空间分辨率、测距与采样约束}
 
 若入纤光脉冲持续时间为$\tau_p$，忽略脉冲整形和接收带宽的附加影响，其对应的光纤长度为$v_g\tau_p=c\tau_p/n_g$。由于OTDR采用往返计时，近似空间分辨率为
@@ -64,6 +169,17 @@ $\Delta z_s$是距离采样间隔，并不必然等于系统空间分辨率。�
 \end{equation}
 
 减小$\tau_p$可改善空间分辨率，但也会减少单个脉冲能量，使远距离瑞利回波进一步减弱；提高峰值功率又可能引入非线性效应。因此，脉冲宽度、峰值功率、接收带宽和传感距离之间需要联合权衡\cite{martins2013modulation,ren2016extinction,wang2019pulsecoding}。
+
+有限接收带宽会展宽系统脉冲响应。若光电探测、模拟前端和数字滤波构成的等效时间响应宽度为$\tau_B$，其距离展宽可记为$\Delta z_B=c\tau_B/(2n_g)$。在未作反卷积的情况下，系统有效空间分辨率可近似写成
+
+\begin{equation}
+\Delta z_{\mathrm{eff}}
+\gtrsim
+\max\!\left(\Delta z_p,\Delta z_B\right).
+\label{eq:effective_spatial_resolution}
+\end{equation}
+
+$\tau_B$取决于完整接收链的脉冲响应及所采用的分辨判据，不能简单把$1/B$或采样间隔直接等同为空间分辨率。数字采样只决定距离网格的疏密；只有在$\Delta z_s$足够小且接收带宽充分时，采样数据才不会进一步限制可实现的空间分辨能力。
 
 为避免前一脉冲的远端回波与后一脉冲混叠，脉冲重复周期$T_r$应不小于光在传感光纤中的往返时间。若重复频率$f_r=1/T_r$，最大无模糊距离满足
 
@@ -117,6 +233,63 @@ S(z+L_g,m)S^*(z,m),
 \end{equation}
 
 复共轭差分可直接消除两位置共有的部分相位，但无法消除沿距离或时间不一致的光源相位噪声。增大$L_g$通常能够增加应变引起的相位变化并改善一定条件下的信噪比，但会扩大空间平均范围，使邻近事件被平滑。因此，标距既是相位灵敏度参数，也是有效空间分辨能力参数\cite{qian2025drift,yang2022digitalized}。
+
+\subsection{DAS系统主要性能指标及相互约束}
+
+DAS性能不能由单一参数描述。空间分辨率、有效传感距离、应变分辨率、信噪比和振动响应带宽共同决定系统的可用性，并受到脉宽、峰值功率、脉冲重复频率、接收带宽、标距和平均策略的共同影响。表\ref{tab:das_performance_metrics}汇总了这些指标的物理含义及主要限制因素。
+
+\begin{table}[htbp]
+  \centering
+  \caption{DAS主要性能指标、定义与限制因素}
+  \label{tab:das_performance_metrics}
+  \renewcommand{\arraystretch}{1.22}
+  \begin{tabular}{p{0.16\textwidth}p{0.34\textwidth}p{0.38\textwidth}}
+    \toprule
+    指标 & 物理含义或评价方式 & 主要限制因素 \\
+    \midrule
+    空间分辨率 & 可区分两个相邻事件的最小距离，受式\eqref{eq:effective_spatial_resolution}约束 & 光脉冲宽度、接收链脉冲响应、采样间隔、解调与判决方法 \\
+    有效传感距离 & 在规定误码、相位噪声或信噪比门限下仍能可靠解调的最远位置 & 双程衰减、脉冲能量、散射系数、器件插损、非线性阈值和接收噪声 \\
+    应变分辨率 & 指定标距和带宽内可分辨的最小等效应变 & 差分相位噪声、标距、光弹系数、衰落与环境漂移 \\
+    信噪比 & 指定时空窗口与带宽内，有用信号功率相对噪声功率的比值 & 瑞利回波功率、本振功率、散粒噪声、热噪声、ASE、相位噪声和处理增益 \\
+    响应带宽 & 固定位置处可无混叠恢复的振动频率范围 & 脉冲重复频率、传感距离、平均或抽取策略、数字滤波和相位展开 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+式\eqref{eq:max_range}给出的是由脉冲重复频率决定的最大无模糊距离，并不等于实际有效传感距离。后者还要求远端回波经双程衰减后仍高于接收与解调门限。因此，应在规定的解调流程、噪声带宽和可信度判据下报告有效距离，不能仅以采集窗口覆盖到的最远点作为传感距离。
+
+令应变--相位灵敏度系数为
+
+\begin{equation}
+K_\varepsilon
+=
+\frac{4\pi n_{\mathrm{eff}}L_g}{\lambda_0}(1-p_e),
+\label{eq:strain_phase_sensitivity}
+\end{equation}
+
+若无扰动条件下、指定测量带宽内差分相位标准差为$\sigma_{\Delta\phi}$，则等效应变噪声或应变分辨率可写为
+
+\begin{equation}
+\sigma_\varepsilon
+=
+\frac{\sigma_{\Delta\phi}}{K_\varepsilon}.
+\label{eq:strain_resolution}
+\end{equation}
+
+式\eqref{eq:strain_resolution}表明，增大标距可提高相位对应变的灵敏度，但也扩大空间平均范围。应变分辨率必须同时注明$L_g$、统计时长和测量带宽，否则不同系统间的数值不具备直接可比性。
+
+信噪比的一般功率定义为
+
+\begin{equation}
+\mathrm{SNR}
+=
+10\log_{10}\!\left(\frac{P_{\mathrm{sig}}}{P_{\mathrm{noise}}}\right).
+\label{eq:das_snr_definition}
+\end{equation}
+
+其中，$P_{\mathrm{sig}}$和$P_{\mathrm{noise}}$应在相同的时间区间、空间区间与等效噪声带宽内计算。对窄带正弦扰动，可由功率谱中信号峰及邻近噪声底估计；对瞬态或宽带事件，则更适合在规定时窗内比较信号能量与基线噪声能量。仅比较幅值峰值而不规定带宽，会使SNR结果依赖采样率和滤波参数。
+
+在逐脉冲形成一帧慢时间数据时，未经抽取的最高无混叠振动频率理论上小于$f_r/2$。若每$N_a$帧作不重叠平均并仅输出一个结果，有效慢时间采样率降为$f_r/N_a$；若采用逐帧滑动平均，输出采样率仍为$f_r$，但平均滤波器会衰减高频分量。由此可见，长距离要求较低$f_r$，提高SNR常要求平均，而高频响应又要求较高有效帧率，三者需要联合设计。
 
 \section{EDFA与SOA工作特性、性能差异及选型依据}
 \label{sec:edfa_soa_selection}
@@ -224,16 +397,16 @@ n_{\mathrm{sp}}h\nu(G-1)B_o,
 \label{eq:soa_chirp}
 \end{equation}
 
-式\eqref{eq:soa_chirp}说明，只要脉冲建立或恢复期间的增益随时间变化，输出相位就可能产生动态变化，并表现为瞬态啁啾。其符号和幅度取决于器件结构、偏置、输入功率、脉冲边沿、载流子恢复和热过程，不能将其视为与AOM相同的恒定频移\cite{cao2002characterization,matsuura2015chirp,sutili2021chirp,connelly2023dynamic}。
+式\eqref{eq:soa_chirp}表明，脉冲建立与恢复期间的增益变化通过线宽增强因子耦合到输出相位，并由相位的时间导数形成瞬态啁啾。啁啾的方向和幅度由器件结构、偏置、输入功率、脉冲边沿、载流子恢复及热过程共同决定，因而表现为随脉冲演化的动态频率调制，与AOM产生的恒定移频具有不同的物理来源和时间特征\cite{cao2002characterization,matsuura2015chirp,sutili2021chirp,connelly2023dynamic}。
 
-更完整的SOA模型还需要考虑载流子加热、光谱烧孔、ASE反馈和沿程饱和\cite{baveja2010selfphase,sobhanan2022soa}。本章采用式\eqref{eq:soa_phase_gain}和式\eqref{eq:soa_chirp}建立定性与半定量联系；第三章将结合实际SOA端电流、时域光脉冲、外差瞬时相位及其时间导数检验该模型，避免仅依据单次FFT峰值判断啁啾规律。
+载流子加热、光谱烧孔、ASE反馈和沿程饱和会进一步修正增益与相位的动态响应\cite{baveja2010selfphase,sobhanan2022soa}。式\eqref{eq:soa_phase_gain}和式\eqref{eq:soa_chirp}提取了载流子--增益--相位耦合的主导关系，为分析SOA驱动对外差拍频的影响提供定性与半定量依据。第三章将结合实际SOA端电流、时域光脉冲、外差瞬时相位及其时间导数，辨识不同工作条件下的瞬态啁啾特征并量化其对拍频信号的影响。
 
-图\ref{fig:chap2_soa_coupling_chain}将上述理论关系整理为“驱动--载流子--增益--折射率--频率--拍频”的候选传递链。该图同时给出受控变量、排他性对照和分层观测量，强调载流子--折射率耦合只构成待检验的物理途径；只有电脉冲、光脉冲、光谱、拍频与解调相位在受控实验中呈现一致变化时，才能提高机理归因的证据强度。
+图\ref{fig:chap2_soa_coupling_chain}将上述关系概括为“驱动--载流子--增益--折射率与相位--瞬时频率--拍频与解调相位”的物理传递链。实验中通过控制电流、脉宽、温度和输入功率调节SOA工作状态，以固定AOM参数、改变时延及暗态与断光测试分离移频、时序和电串扰等混杂因素，并由电脉冲、光脉冲、光谱、拍频及解调相位构成分层观测。该框架建立了SOA内部动态与系统可观测量之间的对应关系，可用于辨识各环节的响应特征及其对最终解调结果的贡献。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.96\textwidth]{images/chap2_soa_coupling_chain.pdf}
-  \caption{SOA工作状态向外差拍频和解调相位传递的候选耦合路径}
+  \caption{SOA工作状态到外差拍频与解调相位的传递链路}
   \label{fig:chap2_soa_coupling_chain}
 \end{figure}
 
@@ -298,7 +471,7 @@ i_{\mathrm{BPD}}(t)
 
 其中，$R$为光电响应度，$f_b=|f_{\mathrm{sig}}-f_{\mathrm{LO}}|$为拍频，$n_i(t)$包含散粒噪声、热噪声、相对强度噪声和接收电子学噪声。平衡探测只在两臂增益、带宽和时延充分匹配时有效抑制共模分量；功率不平衡、BPD饱和和电缆差异都会降低共模抑制比\cite{lu2010distributed,pan2011phase,liokumovich2015fundamentals}。
 
-若AOM仅位于其中一条支路，理想拍频主要由$f_A$确定。但激光频率漂移、SOA候选动态相位、AOM射频误差和采样时钟误差均可能使实际中频偏离标称值。因此，数字本振频率需结合实测频谱和时钟关系进行校核，而不能仅依据AOM标称频率设置。
+若AOM仅位于其中一条支路，理想拍频主要由$f_A$确定。但激光频率漂移、SOA动态相位、AOM射频误差和采样时钟误差均可能使实际中频偏离标称值。因此，数字本振频率需结合实测频谱和时钟关系进行校核，而不能仅依据AOM标称频率设置。
 
 \subsection{数字下变频与I/Q相位提取}
 
@@ -371,6 +544,21 @@ j\left[
 
 本文对距离维信号采用式\eqref{eq:complex_difference}所示的复共轭差分，在相位求解前保持复数运算形式。低SNR区的相位概率分布会趋于发散，差分和相位展开无法恢复原本不存在的可靠信息\cite{lu2021detection,lu2022phaseerror,lu2023phase}；大动态应变场景还需要处理相邻样点相位增量超过$\pi$时的解缠绕约束\cite{ran2025dynamic_thesis}。第4章将在实验参数表中给出空间步长、差分标距、滤波参数和有效区域，并在统一参数配置下评价系统性能。
 
+\subsection{瑞利干涉衰落与低幅值相位失效}
+
+式\eqref{eq:rayleigh_sum}中的多个随机散射相量可能在某些距离位置近似抵消，使合成复包络幅值$A=|S|$接近零。这种由相干瑞利散射随机叠加产生的局部深衰落称为瑞利干涉衰落或相干衰落。它不同于光纤平均损耗：平均损耗随距离缓慢变化，而干涉衰落表现为叠加在平均包络上的随机深谷，且衰落位置会随光频率、温度和应变状态变化\cite{tu2020fading,cheng2023subband,cui2021interference,lei2025fading_cn}。
+
+将下变频后的I/Q噪声近似为方差相同且相互独立的高斯噪声，在高SNR小误差条件下，相位估计方差与复包络幅值平方近似成反比：
+
+\begin{equation}
+\operatorname{var}(\hat\phi)
+\approx
+\frac{\sigma_{IQ}^2}{A^2},
+\label{eq:phase_variance_amplitude}
+\end{equation}
+
+其中，$\sigma_{IQ}^2$表示等效正交噪声方差。式\eqref{eq:phase_variance_amplitude}说明，当$A\rightarrow0$时，相位误差急剧增大；此时相位展开、空间差分或时间滤波都无法恢复原本缺乏可信度的信息。频率分集、脉冲编码、多频融合和选优合成可利用不同观测下衰落位置不完全重合的特点降低连续失效概率，但仍应设置幅值或功率可信度门限，避免对噪声主导的复数直接求相位。
+
 \subsection{偏振衰落与双偏振接收}
 
 单模光纤中的双折射随机变化使回波偏振态沿距离和时间演化。设信号光和本振光的归一化Jones矢量分别为$\mathbf e_s$和$\mathbf e_{\mathrm{LO}}$，相干拍频幅度与其内积模值成正比：
@@ -390,6 +578,15 @@ A_b
 P_{\Sigma}=|S_x|^2+|S_y|^2,
 \label{eq:polarization_power}
 \end{equation}
+
+瑞利干涉衰落与偏振衰落的区别如图\ref{fig:chap2_fading_mechanisms}所示。前者来自同一分辨单元内随机散射相量的近似抵消，后者来自信号光与本振光Jones矢量投影过小；两者都表现为局部拍频幅值降低和相位噪声增加，但需要采用不同的缓解途径。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{images/chap2_fading_mechanisms.pdf}
+  \caption{瑞利干涉衰落与外差相干接收中的偏振衰落机理}
+  \label{fig:chap2_fading_mechanisms}
+\end{figure}
 
 但相位融合不能简单相加，因为两通道可能具有不同增益、直流偏置、I/Q方向、时延和固定相位。已有研究采用偏振分集接收、相干MIMO、偏振旋转和多维融合降低衰落\cite{dorize2018polarization,mompo2019distributed,tu2020fading,guerrier2020mimo,gorajoobi2022polarization,xie2023fading}。
 
@@ -417,6 +614,8 @@ w_x+w_y=1,
 
 \section{本章小结}
 
-本章从相干瑞利散射出发，建立了回波时间与距离、脉冲宽度与空间分辨率、重复频率与最大测距之间的关系；比较了EDFA与SOA的增益介质、驱动方式、动态响应、噪声和集成特性，并说明本文选择SOA是面向无EDFA紧凑发射链路的适配性取舍。随后利用载流子速率、增益传播和线宽增强因子说明集成SOA的ECL激光器中SOA的增益饱和、ASE及候选瞬态啁啾，利用声学渡越过程说明AOM移频和门控窗口，并推导外差BPD输出、数字下变频、I/Q相位提取、频率失配、复共轭差分和双偏振接收模型。
+本章首先从传播相位全微分出发，说明声波引起的几何长度变化和光弹效应如何共同形成往返差分相位；随后建立相干瑞利后向散射的复场、概率统计、双程衰减和距离映射模型，对比传统OTDR、直接探测、自外差及外部本振相干探测方案，并系统说明空间分辨率、有效传感距离、应变分辨率、信噪比和响应带宽之间的约束关系。在此基础上，比较EDFA与SOA的增益介质、驱动方式、动态响应、噪声和集成特性，说明本文选择SOA是面向无EDFA紧凑发射链路的适配性取舍。
 
-上述模型把后续实验中的关键变量统一到“发射脉冲--移频时序--拍频接收--数字相位解调”的链路中。第三章将据此测量SOA端实际驱动、光脉冲、ASE、拍频和AOM时序，并给出DAS一体化收发模组及分立式基线对比；第四章将在统一参数配置下完成BPD双通道标定、数字相位解调和振动性能验证。第三章将进一步给出模组光路结构、系统设计与实验结果。
+随后，本章利用载流子速率、增益传播和线宽增强因子说明集成SOA的ECL激光器中SOA的增益饱和、ASE及瞬态啁啾，利用声学渡越过程说明AOM移频和门控窗口，并推导外差BPD输出、数字下变频、I/Q相位提取、频率失配和复共轭差分模型。最后分别分析瑞利干涉衰落与偏振衰落，给出低幅值相位失效、双偏振接收和可信度门限的处理依据。
+
+上述模型统一了后续实验的发射、移频、接收和解调变量。第三章据此完成一体化收发模组实验，第四章在统一参数下完成接收标定和数字相位解调验证。

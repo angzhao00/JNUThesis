@@ -3,8 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import font_manager
-from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Rectangle
+from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Polygon, Rectangle
 from PIL import Image
 
 
@@ -46,100 +47,92 @@ def prepare_application_photos() -> None:
 
 
 def draw_packaged_eom_aom() -> None:
-    """Draw packaged EOM and AOM devices in the same style as the DFB laser."""
+    """Draw a slim packaged EOM phase modulator and a blue AOM Bragg cell in
+    clearly distinct styles so the two device panels are easy to tell apart."""
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
     ax.set_xlim(0, 12)
     ax.set_ylim(0, 7)
     ax.set_aspect("equal")
     ax.axis("off")
 
-    # Optical pigtails use the same two-tone treatment as the DFB illustration.
-    fiber_segments = [
-        ((0.2, 1.3), (3.5, 3.5)),
-        ((5.35, 5.95), (3.5, 3.5)),
-        ((6.05, 6.65), (3.5, 3.5)),
-        ((10.85, 11.8), (3.5, 3.5)),
-    ]
-    for (x0, x1), (y0, y1) in fiber_segments:
-        ax.plot([x0, x1], [y0, y1], color="#f2c230", linewidth=5.0, solid_capstyle="round")
-        ax.plot([x0, x1], [y0, y1], color="#fff1a8", linewidth=1.2, solid_capstyle="round")
+    fiber_color = "#e8b13a"
 
-    # EOM: compact silver package with electrical pins and an identification plate.
-    for x in (2.0, 2.65, 3.30, 3.95, 4.60):
-        ax.add_patch(Rectangle((x - 0.08, 1.18), 0.16, 0.92, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
-        ax.add_patch(Rectangle((x - 0.08, 4.90), 0.16, 0.92, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
-    ax.add_patch(Rectangle((1.0, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
-    ax.add_patch(Rectangle((5.18, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    # ------------------------------------------------------------------
+    # EOM: low-profile silver phase modulator with a straight through path.
+    # ------------------------------------------------------------------
+    for (x0, x1) in ((0.15, 1.0), (5.35, 6.3)):
+        ax.plot([x0, x1], [4.1, 4.1], color=fiber_color, linewidth=5.0, solid_capstyle="round")
+        ax.plot([x0, x1], [4.1, 4.1], color="#ffe9a3", linewidth=1.2, solid_capstyle="round")
+
     ax.add_patch(
         FancyBboxPatch(
-            (1.25, 1.95),
-            4.15,
-            3.10,
-            boxstyle="round,pad=0.03,rounding_size=0.16",
-            facecolor="#c5cbd0",
-            edgecolor="#52595f",
+            (1.0, 2.85),
+            4.35,
+            2.5,
+            boxstyle="round,pad=0.03,rounding_size=0.14",
+            facecolor="#d7dde2",
+            edgecolor="#4f5559",
             linewidth=1.4,
         )
     )
-    ax.add_patch(Rectangle((1.62, 2.27), 3.41, 2.46, facecolor="#aeb6bc", edgecolor="#626a70", linewidth=1.0))
-    for x in (1.52, 5.13):
-        for y in (2.25, 4.75):
-            ax.add_patch(Circle((x, y), 0.13, facecolor="#555d62", edgecolor="#30363a", linewidth=0.7))
-            ax.add_patch(Circle((x, y), 0.05, facecolor="#d9dde0", edgecolor="none"))
-    ax.add_patch(
-        FancyBboxPatch(
-            (2.0, 2.72),
-            2.65,
-            1.56,
-            boxstyle="round,pad=0.03,rounding_size=0.08",
-            facecolor="#eef1f3",
-            edgecolor="#737b80",
-            linewidth=1.0,
-        )
-    )
-    ax.text(3.325, 3.72, "EOM", ha="center", va="center", fontsize=17, weight="bold", color="#174f78")
-    ax.text(3.325, 3.18, "1550 nm", ha="center", va="center", fontsize=10.5, color="#3e474d")
-    ax.plot([2.42, 4.23], [2.91, 2.91], color="#d43b32", linewidth=1.3)
-    ax.add_patch(FancyArrowPatch((3.05, 2.91), (2.50, 2.91), arrowstyle="-|>", mutation_scale=9, color="#d43b32"))
+    ax.add_patch(Rectangle((1.45, 3.25), 3.45, 1.7, facecolor="#bcc3c9", edgecolor="#626a70", linewidth=1.0))
 
-    # AOM: blue anodized package, drawn with matching geometry and line weights.
-    ax.add_patch(Rectangle((6.30, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
-    ax.add_patch(Rectangle((10.68, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    # LiNbO3 chip with two waveguide lines and a phase-modulation symbol.
+    ax.add_patch(Rectangle((2.05, 3.6), 1.55, 1.0, facecolor="#e9d6f2", edgecolor="#7a5a8a", linewidth=0.9))
+    ax.plot([2.1, 3.55], [4.03, 4.03], color="#6a4a7a", linewidth=0.9)
+    ax.plot([2.1, 3.55], [4.27, 4.27], color="#6a4a7a", linewidth=0.9)
+    xs = np.linspace(2.15, 3.5, 60)
+    ax.plot(xs, 4.15 + 0.10 * np.sin(9 * (xs - 2.15)), color="#c0392b", linewidth=1.1)
+
+    # Straight light path through the modulator.
+    ax.add_patch(FancyArrowPatch((1.42, 4.1), (2.0, 4.1), arrowstyle="-|>", mutation_scale=8, color="#333333"))
+    ax.add_patch(FancyArrowPatch((3.65, 4.1), (4.75, 4.1), arrowstyle="-|>", mutation_scale=8, color="#333333"))
+
+    # Small RF pin on top of the EOM package.
+    ax.add_patch(Rectangle((2.85, 5.35), 0.55, 0.35, facecolor="#8d9499", edgecolor="#4f5559", linewidth=0.8))
+    ax.add_patch(Rectangle((3.03, 5.55), 0.14, 0.30, facecolor="#d9dde0", edgecolor="#4f5559", linewidth=0.6))
+
+    # ------------------------------------------------------------------
+    # AOM: blue Bragg cell with an RF drive and an angled diffracted order.
+    # ------------------------------------------------------------------
+    for (x0, x1) in ((6.4, 7.15), (11.1, 11.95)):
+        ax.plot([x0, x1], [3.15, 3.15], color=fiber_color, linewidth=5.0, solid_capstyle="round")
+        ax.plot([x0, x1], [3.15, 3.15], color="#ffe9a3", linewidth=1.2, solid_capstyle="round")
+
     ax.add_patch(
         FancyBboxPatch(
-            (6.55, 1.95),
-            4.35,
-            3.10,
-            boxstyle="round,pad=0.03,rounding_size=0.16",
-            facecolor="#75a9c1",
+            (7.15, 1.6),
+            3.95,
+            4.0,
+            boxstyle="round,pad=0.03,rounding_size=0.14",
+            facecolor="#5f94ad",
             edgecolor="#485a63",
             linewidth=1.4,
         )
     )
-    ax.add_patch(Rectangle((6.93, 2.27), 3.59, 2.46, facecolor="#5f94ad", edgecolor="#526b77", linewidth=1.0))
-    for x in (6.82, 10.63):
-        for y in (2.25, 4.75):
-            ax.add_patch(Circle((x, y), 0.13, facecolor="#555d62", edgecolor="#30363a", linewidth=0.7))
-            ax.add_patch(Circle((x, y), 0.05, facecolor="#d9dde0", edgecolor="none"))
-    ax.add_patch(
-        FancyBboxPatch(
-            (7.28, 2.72),
-            2.90,
-            1.56,
-            boxstyle="round,pad=0.03,rounding_size=0.08",
-            facecolor="#edf3f5",
-            edgecolor="#60737c",
-            linewidth=1.0,
-        )
-    )
-    ax.text(8.73, 3.72, "AOM", ha="center", va="center", fontsize=17, weight="bold", color="#174f78")
-    ax.text(8.73, 3.18, "80 MHz", ha="center", va="center", fontsize=10.5, color="#3e474d")
-    ax.plot([7.70, 9.76], [2.91, 2.91], color="#d43b32", linewidth=1.3)
-    ax.add_patch(FancyArrowPatch((8.42, 2.91), (7.78, 2.91), arrowstyle="-|>", mutation_scale=9, color="#d43b32"))
+    ax.add_patch(Rectangle((7.5, 1.95), 3.25, 3.3, facecolor="#4c83a0", edgecolor="#3d6b84", linewidth=1.0))
 
-    # RF input connector distinguishes the AOM from the optical EOM package.
-    ax.add_patch(Rectangle((8.48, 1.53), 0.50, 0.45, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
-    ax.add_patch(Rectangle((8.57, 1.03), 0.32, 0.50, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.8))
+    # Acousto-optic crystal, gold transducer and SMA connector.
+    ax.add_patch(Rectangle((7.75, 2.35), 2.75, 2.15, facecolor="#a8ccdd", edgecolor="#3d6b84", linewidth=0.9))
+    ax.add_patch(Rectangle((8.6, 4.35), 1.05, 0.7, facecolor="#d89a4a", edgecolor="#8a5a1f", linewidth=0.8))
+    ax.add_patch(Rectangle((8.5, 5.6), 1.25, 0.85, facecolor="#22262b", edgecolor="#0e1113", linewidth=1.0))
+    ax.add_patch(Rectangle((9.08, 6.15), 0.14, 0.55, facecolor="#d9dde0", edgecolor="#0e1113", linewidth=0.6))
+
+    # Acoustic waves travelling downward from the transducer.
+    for k, yy in enumerate((4.22, 3.92, 3.62)):
+        xs = np.linspace(8.85, 9.40, 30)
+        ax.plot(xs, yy + 0.05 * np.sin(10 * (xs - 8.85) + 0.8 * k), color="#1f4a5f", linewidth=1.0)
+
+    # 0th order continues into the output fiber; 1st order is diffracted up.
+    ax.add_patch(FancyArrowPatch((7.5, 3.15), (8.6, 3.15), arrowstyle="-|>", mutation_scale=8, color="#c0392b"))
+    ax.plot([8.6, 10.9], [3.15, 3.15], color="#c0392b", linewidth=1.1)
+    ax.add_patch(
+        FancyArrowPatch((8.9, 3.15), (10.45, 3.95), arrowstyle="-|>", mutation_scale=8, color="#c0392b", linestyle=(0, (4, 2)))
+    )
+
+    # Device captions below each package.
+    ax.text(3.2, 2.45, "EOM · 1550 nm", ha="center", va="center", fontsize=11, weight="bold", color="#174f78")
+    ax.text(9.15, 1.15, "AOM", ha="center", va="center", fontsize=11, weight="bold", color="#174f78")
 
     fig.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01)
     fig.savefig(
@@ -153,58 +146,110 @@ def draw_packaged_eom_aom() -> None:
 
 
 def draw_dfb_laser() -> None:
-    """Draw a clean butterfly-packaged DFB laser for the chapter overview."""
+    """Draw a butterfly-packaged DFB laser in cutaway, showing the laser chip
+    and lasing beam so it reads clearly as a light source next to the EOM/AOM."""
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
     ax.set_xlim(0, 12)
     ax.set_ylim(0, 7)
     ax.set_aspect("equal")
     ax.axis("off")
 
-    # Fiber pigtail and strain relief.
-    ax.plot([0.2, 2.1], [3.5, 3.5], color="#f2c230", linewidth=5.0, solid_capstyle="round")
-    ax.plot([0.2, 2.1], [3.5, 3.5], color="#fff1a8", linewidth=1.2, solid_capstyle="round")
-    ax.add_patch(Rectangle((1.75, 3.18), 0.65, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    # Output fiber pigtail entering the package from the left.
+    ax.plot([0.15, 2.6], [3.5, 3.5], color="#e8b13a", linewidth=5.0, solid_capstyle="round")
+    ax.plot([0.15, 2.6], [3.5, 3.5], color="#ffe9a3", linewidth=1.2, solid_capstyle="round")
+    ax.add_patch(Rectangle((2.2, 3.14), 0.75, 0.72, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
 
-    # Fourteen electrical pins along the package sides.
-    pin_x = [2.75, 3.65, 4.55, 5.45, 6.35, 7.25, 8.15]
-    for x in pin_x:
-        ax.add_patch(Rectangle((x - 0.09, 0.45), 0.18, 1.28, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
-        ax.add_patch(Rectangle((x - 0.09, 5.27), 0.18, 1.28, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
-
-    # Metal flange, mounting holes, and raised package body.
+    # Butterfly package body.
     ax.add_patch(
         FancyBboxPatch(
-            (2.0, 1.55),
-            8.0,
-            3.9,
+            (1.9, 1.1),
+            8.2,
+            4.8,
             boxstyle="round,pad=0.03,rounding_size=0.18",
             facecolor="#c5cbd0",
             edgecolor="#52595f",
-            linewidth=1.4,
+            linewidth=1.5,
         )
     )
-    ax.add_patch(Rectangle((2.65, 1.85), 6.7, 3.3, facecolor="#aeb6bc", edgecolor="#626a70", linewidth=1.0))
-    for x in (2.35, 9.65):
-        for y in (1.95, 5.05):
-            ax.add_patch(Circle((x, y), 0.18, facecolor="#555d62", edgecolor="#30363a", linewidth=0.8))
+    ax.add_patch(Rectangle((2.45, 1.4), 7.1, 4.2, facecolor="#aeb6bc", edgecolor="#626a70", linewidth=1.0))
+
+    # Fourteen gold pins along the package sides.
+    pin_x = [2.85, 3.75, 4.65, 5.55, 6.45, 7.35, 8.25]
+    for x in pin_x:
+        ax.add_patch(Rectangle((x - 0.10, 0.25), 0.20, 0.95, facecolor="#e0b84f", edgecolor="#8a6d1f", linewidth=0.7))
+        ax.add_patch(Rectangle((x - 0.10, 5.80), 0.20, 0.95, facecolor="#e0b84f", edgecolor="#8a6d1f", linewidth=0.7))
+
+    # Mounting holes.
+    for x in (2.3, 9.7):
+        for y in (1.5, 5.5):
+            ax.add_patch(Circle((x, y), 0.17, facecolor="#555d62", edgecolor="#30363a", linewidth=0.8))
             ax.add_patch(Circle((x, y), 0.07, facecolor="#d9dde0", edgecolor="none"))
 
-    # Identification plate and optical-axis mark.
+    # Cutaway window exposing the internal optical bench.
+    ax.add_patch(Rectangle((2.8, 1.8), 4.9, 3.4, facecolor="#f4f6f7", edgecolor="#52595f", linewidth=1.1))
+
+    # Internal fiber stub, coupling lens and TEC.
+    ax.plot([2.9, 4.05], [3.5, 3.5], color="#e8b13a", linewidth=3.0, solid_capstyle="round")
+    ax.add_patch(Circle((4.12, 3.5), 0.18, facecolor="#8d9499", edgecolor="#4f5559", linewidth=0.8))
+    ax.add_patch(Rectangle((4.65, 2.5), 1.6, 0.85, facecolor="#d7dde2", edgecolor="#626a70", linewidth=0.8, hatch="////"))
+
+    # Laser chip with a glowing active stripe.
+    ax.add_patch(Rectangle((4.65, 3.05), 1.6, 0.9, facecolor="#2f3b44", edgecolor="#141a1f", linewidth=1.1))
+    ax.plot([4.65, 6.25], [3.5, 3.5], color="#e63946", linewidth=1.7)
+
+    # Lasing beam launched into the fiber.
+    ax.add_patch(
+        Polygon(
+            [(4.62, 3.30), (4.62, 3.70), (3.05, 3.56), (3.05, 3.44)],
+            closed=True,
+            facecolor="#e63946",
+            alpha=0.22,
+            edgecolor="none",
+        )
+    )
+    ax.add_patch(Circle((4.62, 3.5), 0.30, facecolor="#e63946", alpha=0.25, edgecolor="none"))
+    ax.add_patch(FancyArrowPatch((4.25, 3.5), (3.30, 3.5), arrowstyle="-|>", mutation_scale=9, color="#e63946"))
+
+    # Monitor photodiode behind the rear facet.
+    ax.add_patch(Rectangle((6.45, 3.28), 0.5, 0.44, facecolor="#7b8790", edgecolor="#4f5559", linewidth=0.8))
+    ax.add_patch(FancyArrowPatch((6.32, 3.5), (6.44, 3.5), arrowstyle="-|>", mutation_scale=8, color="#c0392b"))
+
+    # Internal labels.
+    ax.annotate(
+        "激光芯片",
+        xy=(5.40, 3.90),
+        xytext=(5.20, 4.75),
+        fontproperties=CN,
+        fontsize=9.5,
+        color="#333333",
+        ha="center",
+        arrowprops=dict(arrowstyle="-", color="#333333", linewidth=0.8),
+    )
+    ax.annotate(
+        "TEC",
+        xy=(5.45, 2.55),
+        xytext=(5.20, 2.02),
+        fontproperties=CN,
+        fontsize=9.5,
+        color="#333333",
+        ha="center",
+        arrowprops=dict(arrowstyle="-", color="#333333", linewidth=0.8),
+    )
+
+    # Identification plate.
     ax.add_patch(
         FancyBboxPatch(
-            (3.35, 2.35),
-            5.3,
-            2.3,
+            (7.85, 3.05),
+            1.65,
+            1.55,
             boxstyle="round,pad=0.04,rounding_size=0.10",
             facecolor="#eef1f3",
             edgecolor="#737b80",
             linewidth=1.0,
         )
     )
-    ax.text(6.0, 3.85, "DFB LASER", ha="center", va="center", fontsize=19, weight="bold", color="#174f78")
-    ax.text(6.0, 3.15, "1550 nm", ha="center", va="center", fontsize=13, color="#3e474d")
-    ax.plot([4.3, 7.7], [2.78, 2.78], color="#d43b32", linewidth=1.5)
-    ax.add_patch(FancyArrowPatch((5.35, 2.78), (4.45, 2.78), arrowstyle="-|>", mutation_scale=10, color="#d43b32"))
+    ax.text(8.675, 3.95, "DFB", ha="center", va="center", fontsize=17, weight="bold", color="#174f78")
+    ax.text(8.675, 3.35, "1550 nm", ha="center", va="center", fontsize=9.5, color="#3e474d")
 
     fig.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01)
     fig.savefig(IMAGES / "chap1_dfb_laser.png", dpi=300, bbox_inches="tight", pad_inches=0.04, facecolor="white")
