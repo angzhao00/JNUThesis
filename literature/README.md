@@ -16,4 +16,4 @@
 
 检索筛选流程图和论文问题—证据关系图默认只作内部审计，不放入正式论文。
 
-整篇论文的唯一总任务说明见项目根目录的`MASTER_THESIS_WRITING_PLAN.md`；当前文献汇总见`reference_collection_report.md`，新增10篇的逐条核验记录见`reference_addition_log.csv`。
+整篇论文的唯一总任务说明见`plans/MASTER_THESIS_WRITING_PLAN.md`；当前文献汇总见`reference_collection_report.md`，新增10篇的逐条核验记录见`reference_addition_log.csv`。

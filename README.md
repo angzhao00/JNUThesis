@@ -6,7 +6,7 @@ JNUThesis
 
 # 注意（非常重要）
 --------------------------------------------------------
-1. 由于本项目是开源的，所以使用的字体文件也都来源于网络上的免费字体，与常用的Windows字体存在一些差异。Windows系统中字体文件默认都放在"C:\Windows\Fonts"文件夹下，可以自行寻找并替换本项目。具体的操作方法，请参考原始项目或JNUThesis.pdf中第2.1节的内容。
+1. 由于本项目是开源的，所以使用的字体文件也都来源于网络上的免费字体，与常用的Windows字体存在一些差异。Windows系统中字体文件默认都放在"C:\Windows\Fonts"文件夹下，可以自行寻找并替换本项目。具体的操作方法，请参考原始项目或编译生成的build/JNUThesis.pdf中第2.1节的内容。
 2. 由于Overleaf网站在经历数轮升级后，免费账户的实际可编译内容似乎被（暗中）缩短，因此将项目转移至国产的TexPage网站上。目前（2026年02月）项目在TexPage上运行良好，且可编译内容与早期的Overleaf相近，会员价格也便宜。国产赛高！！！
 3. 后续版本（可能的）更新会放在Github与TexPage上，Overleaf上的项目仅供考古，链接如下：[JNUThesis_Overleaf](https://cn.overleaf.com/read/pwvngpvxfxdd)；[JNUThesis(V2.0)_Overleaf](https://cn.overleaf.com/read/ppgmhpbytsss#79bd7f)。）
 
@@ -40,23 +40,28 @@ PPS: 由于作者精力有限，对于同学们反映的一些小问题，一般
 
 ## 源码目录结构
 --------------------------------------------------------
-1. 根目录:JNUThesis.tex是主文件，JNUThesis.pdf是示例文档，README.md是项目描述文件。
-2. bib目录：bib文件存放目录，默认文件是refs.bib。可将论文需要用到的参考文献拷贝到refs.bib中；或者将configs/theme.tex中的命令"\addbibresource[location=local]{bibs/refs.bib}"修改成你所使用的文件。
+1. 根目录:JNUThesis.tex是主文件，README.md是项目描述文件。编译生成的论文PDF位于build/JNUThesis.pdf。
+2. bib目录：正式参考文献库存放目录，默认文件是refs.bib。主文件通过命令"\bibliography{bib/refs}"引入该文献库。
 3. chapters目录(根据需要引用章节，引用方式为"\include{chapters/需要引用的章节名称(不需要.tex后缀)}"):
     > + abstract.tex: 中英文摘要。
     > + acknowledgement.tex: 致谢。
     > + appendix.tex: 附录。
     > + chap1.tex: 第一章。
     > + chap2.tex: 第二章。
-    > + chaps.tex: 正文章节引用(管理除了declaration, abstract, conclusion, paper以及acknowledgement以外的所有正文内容，根据需要添加chaps.tex)。
-    > + conclusion.tex: 结论。
+    > + chap3.tex--chap5.tex: 第三章至第五章。
+    > + chaps.tex: 正文章节引用，统一管理chap1.tex至chap5.tex。
     > + declaration.tex：首页的论文信息，请自行填写个人及导师信息。
     > + papers.tex: 攻读学位期间发表的论文。
 4. configs目录：项目预定义配置文件与用户自定义配置文件。
     > + libs.tex：自定义配置文件，根据需要引入宏包，定义命令。
-    > + theme.tex: 论文格式配置文件。请谨慎修改修改。
+    > + theme.tex: 论文格式配置文件。请谨慎修改。
 5. fonts目录：字体文件存放目录，包含论文中用到的各种字体。
 6. images目录：图片存放目录。
+7. data目录：实验原始数据与处理后统计结果存放目录。
+8. scripts目录：论文图片和实验统计结果的可复现处理脚本。
+9. literature目录：文献检索、核验、草稿和审计材料工作区；正式引用仍以bib/refs.bib为准。
+10. plans目录：论文总任务计划、实验计划和同步目录提纲。
+11. build目录：本地编译产生的临时文件和PDF，由VS Code自动生成，不纳入版本控制。
 
 
 ## 关于更新
@@ -74,7 +79,7 @@ PPS: 由于作者精力有限，对于同学们反映的一些小问题，一般
 2. 超过3个作者以上的中文参考文献，部分作者需要省略为”等“，可以在bib引用中额外增加参数“language={zh}”进行修复。
 3. 默认使用\cite{}的引用会以上标形式出现。部分同学可能还会用到非上标的情况，比如“论文[1]展示了。。。”，因此在新版中可以使用\norcite{}进行非上标的引用。
 4. 切换PDF输出模式的方式。通过修改JNUThesis.tex中的isprint参数实现。默认使用\isprintfalse，去除了空白页，方便阅读。而\isprinttrue表示打印模式，会自动显示空白页以方便双面打印。
-5. 使用JNUThesis.tex中的hasappendix参数控制附录的显示与隐藏。默认使用\hasappendixtrue，表示隐藏附录。需要显示附录时，使用\hasappendixfalse。
+5. 使用JNUThesis.tex中的hasappendix参数控制附录的显示与隐藏。默认使用\hasappendixfalse，表示隐藏附录；需要显示附录时，使用\hasappendixtrue。
 
 
 ## 已修复问题
@@ -162,7 +167,7 @@ PPS: 由于作者精力有限，对于同学们反映的一些小问题，一般
 --------------------------------------------------------
 1. 由于线上编译速度较慢。因此，撰写文稿时可以仅引用当前编辑的章节方便快速查看。暂未使用的章节可以先行注释，当需要阅读全文时再全部引用。正文章节的引用一般是放在chapters/chaps.tex中。
 2. JNUThesis.tex中已包含了许多项目的编译设置，建议将新增宏包的引用放在libs.tex中，方便对项目进行管理。
-3. 免费的TexPage账号所提供的最大编译时间是有限的，对于使用了大量的矢量图(SVD文件)或者内容较长(超过一百五十页)的论文，编译超时可能会导致无法生成PDF。根据作者的经验，将SVD图片等文件转换成JPEG、PNG或者PDF格式将有助于减少编译时间。另外，编译中的语法错误、语法警告也可能导致编译器在语法检查上花费更多时间。如果以上方法都解决不了问题，可以考虑本地编译，或者在TexPage上体验免费会员/充值会员。
+3. 免费的TexPage账号所提供的最大编译时间是有限的，对于使用了大量的矢量图(SVG文件)或者内容较长(超过一百五十页)的论文，编译超时可能会导致无法生成PDF。根据作者的经验，将SVG图片等文件转换成JPEG、PNG或者PDF格式将有助于减少编译时间。另外，编译中的语法错误、语法警告也可能导致编译器在语法检查上花费更多时间。如果以上方法都解决不了问题，可以考虑本地编译，或者在TexPage上体验免费会员/充值会员。
 
 
 ## Author

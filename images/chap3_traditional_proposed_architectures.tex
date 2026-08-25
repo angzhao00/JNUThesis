@@ -1,0 +1,189 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage[UTF8,scheme=plain]{ctex}
+\usepackage{fontspec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,shadings}
+
+\setsansfont{Arial}
+\setCJKsansfont{Microsoft YaHei}
+\renewcommand{\familydefault}{\sfdefault}
+
+\definecolor{ink}{HTML}{24313D}
+\definecolor{probe}{HTML}{D95C4F}
+\definecolor{probehalo}{HTML}{F5C4BC}
+\definecolor{reference}{HTML}{3F73C9}
+\definecolor{scatter}{HTML}{2A9D8F}
+\definecolor{combined}{HTML}{7656B8}
+\definecolor{ppath}{HTML}{C13C78}
+\definecolor{spath}{HTML}{168C91}
+\definecolor{electric}{HTML}{E77C2F}
+\definecolor{control}{HTML}{4F5664}
+\definecolor{laserfill}{HTML}{D8E9F7}
+\definecolor{splitfill}{HTML}{E4DDF3}
+\definecolor{modfill}{HTML}{FFD99A}
+\definecolor{edfafil}{HTML}{F4CFCA}
+\definecolor{fiberfill}{HTML}{D8E9F7}
+\definecolor{pbsfill}{HTML}{BFE5E8}
+\definecolor{bpdfill}{HTML}{F9DFC3}
+\definecolor{daqfill}{HTML}{F2C8B5}
+\definecolor{fpgafill}{HTML}{D8D8F4}
+\definecolor{circlight}{HTML}{A9D5EF}
+\definecolor{circdark}{HTML}{4B84BE}
+
+\tikzset{
+  >={Stealth[length=3.0mm,width=2.2mm]},
+  device/.style={
+    draw=ink,
+    line width=0.85pt,
+    rounded corners=2pt,
+    align=center,
+    font=\sffamily\fontsize{14}{16}\selectfont
+  },
+  labeltext/.style={
+    font=\sffamily\fontsize{13}{15}\selectfont,
+    text=ink
+  },
+  smalllabel/.style={
+    font=\sffamily\fontsize{11.5}{13}\selectfont,
+    text=ink
+  },
+  optic/.style={line width=2.3pt,line cap=round,line join=round,-{Stealth}},
+  fiber/.style={line width=2.1pt,line cap=round,line join=round},
+  electricline/.style={
+    draw=electric,
+    line width=1.7pt,
+    dash pattern=on 5pt off 3pt,
+    line cap=round,
+    -{Stealth}
+  },
+  controlline/.style={
+    draw=control,
+    line width=1.55pt,
+    dash pattern=on 5pt off 3pt,
+    line cap=round,
+    -{Stealth}
+  }
+}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \path[use as bounding box] (0,0) rectangle (28.2,13.0);
+  \fill[white] (0,0) rectangle (28.2,13.0);
+
+  % Main hardware blocks
+  \node[device,fill=laserfill,minimum width=2.25cm,minimum height=1.35cm] (laser) at (1.75,11.15) {窄线宽\\激光器};
+  \node[device,fill=splitfill,minimum width=1.55cm,minimum height=1.35cm] (splitter) at (4.75,11.15) {分光器};
+  \node[device,fill=modfill,minimum width=2.65cm,minimum height=1.45cm] (modulator) at (8.25,11.15) {外部脉冲调制\\与AOM移频};
+  \node[device,fill=edfafil,minimum width=1.75cm,minimum height=1.35cm] (edfa) at (11.35,11.15) {EDFA};
+  \node[device,fill=fiberfill,minimum width=2.35cm,minimum height=1.35cm] (probeFiber) at (17.20,11.15) {探测光纤};
+
+  \node[device,fill=pbsfill,minimum width=1.65cm,minimum height=1.25cm] (pbsU) at (17.10,8.10) {PBS};
+  \node[device,fill=pbsfill,minimum width=1.65cm,minimum height=1.25cm] (pbsL) at (17.10,5.65) {PBS};
+  \node[device,fill=bpdfill,minimum width=2.05cm,minimum height=1.25cm] (bpd1) at (21.85,8.10) {BPD1};
+  \node[device,fill=bpdfill,minimum width=2.05cm,minimum height=1.25cm] (bpd2) at (21.85,5.65) {BPD2};
+  \node[device,fill=daqfill,minimum width=1.55cm,minimum height=4.20cm] (daq) at (26.10,6.88) {DAQ};
+  \node[device,fill=fpgafill,minimum width=2.85cm,minimum height=1.35cm] (fpga) at (5.00,1.45) {FPGA};
+
+  % Optical circulator
+  \shade[ball color=circlight] (14.25,11.15) circle (0.62);
+  \draw[ink,line width=0.9pt] (14.25,11.15) circle (0.62);
+  \draw[ink,line width=1.7pt,-{Stealth[length=2.4mm,width=1.8mm]}]
+    (13.90,11.02) arc[start angle=205,end angle=510,radius=0.36];
+
+  % Laser output and split signal path
+  \draw[reference,line width=4.8pt,opacity=0.16,line cap=round] (laser.east) -- (splitter.west);
+  \draw[reference,optic] (laser.east) -- (splitter.west);
+  \draw[probehalo,line width=5.0pt,line cap=round] (splitter.east) -- (modulator.west);
+  \draw[probe,optic] (splitter.east) -- (modulator.west);
+  \draw[probehalo,line width=5.0pt,line cap=round] (modulator.east) -- (edfa.west);
+  \draw[probe,optic] (modulator.east) -- (edfa.west);
+  \draw[probehalo,line width=5.0pt,line cap=round] (edfa.east) -- (13.63,11.15);
+  \draw[probe,optic] (edfa.east) -- (13.63,11.15);
+  \draw[probehalo,line width=5.0pt,line cap=round] (14.87,11.15) -- (probeFiber.west);
+  \draw[probe,optic] (14.87,11.15) -- (probeFiber.west);
+
+  % Sensing fiber coil
+  \draw[reference,fiber] (probeFiber.east) -- (19.15,11.15);
+  \foreach \x in {19.25,19.52,19.79,20.06,20.33,20.60}
+    \draw[reference,line width=1.55pt] (\x,11.15) ellipse (0.30 and 0.67);
+  \draw[reference,fiber] (20.90,11.15) -- (22.65,11.15);
+
+  % Circulator ports
+  \node[smalllabel] at (13.35,10.72) {1};
+  \node[smalllabel] at (15.15,10.72) {2};
+  \node[smalllabel] at (14.75,9.72) {3};
+
+  % Reference and backscatter paths
+  \draw[reference,line width=4.8pt,opacity=0.16,line cap=round]
+    (splitter.south) -- (4.75,7.05) -- (13.80,7.05);
+  \draw[reference,optic]
+    (splitter.south) -- (4.75,7.05) -- (13.80,7.05);
+  \draw[scatter,line width=4.8pt,opacity=0.16,line cap=round]
+    (14.25,10.53) -- (14.25,7.55);
+  \draw[scatter,optic]
+    (14.25,10.53) -- (14.25,7.55);
+
+  % 2x2 combining coupler
+  \shade[ball color=circlight] (14.25,7.05) circle (0.28);
+  \draw[circdark,line width=0.8pt] (14.25,7.05) circle (0.28);
+  \node[smalllabel,anchor=north] at (14.25,6.66) {$2\times2$耦合器};
+
+  % Combined light to two PBS inputs
+  \draw[combined,line width=4.8pt,opacity=0.15,line cap=round]
+    (14.53,7.05) -- (15.70,7.05);
+  \draw[combined,optic] (14.53,7.05) -- (15.70,7.05);
+  \fill[combined] (15.70,7.05) circle (0.08);
+  \draw[combined,optic] (15.70,7.05) |- (pbsU.west);
+  \draw[combined,optic] (15.70,7.05) |- (pbsL.west);
+
+  % Polarization outputs
+  \coordinate (uTop) at ($(pbsU.east)+(0,0.24)$);
+  \coordinate (uBot) at ($(pbsU.east)+(0,-0.24)$);
+  \coordinate (lTop) at ($(pbsL.east)+(0,0.24)$);
+  \coordinate (lBot) at ($(pbsL.east)+(0,-0.24)$);
+  \coordinate (b1Top) at ($(bpd1.west)+(0,0.24)$);
+  \coordinate (b1Bot) at ($(bpd1.west)+(0,-0.24)$);
+  \coordinate (b2Top) at ($(bpd2.west)+(0,0.24)$);
+  \coordinate (b2Bot) at ($(bpd2.west)+(0,-0.24)$);
+
+  \draw[white,line width=5.6pt,line cap=round] (uTop) -- (b1Top);
+  \draw[ppath,optic] (uTop) -- (b1Top);
+  \draw[white,line width=5.6pt,line cap=round] (lTop) -- (b1Bot);
+  \draw[ppath,optic] (lTop) -- (b1Bot);
+  \draw[white,line width=5.6pt,line cap=round] (uBot) -- (b2Top);
+  \draw[spath,optic] (uBot) -- (b2Top);
+  \draw[white,line width=5.6pt,line cap=round] (lBot) -- (b2Bot);
+  \draw[spath,optic] (lBot) -- (b2Bot);
+
+  % Detection and synchronization connections
+  \draw[electricline] (bpd1.east) -- ++(0.75,0) |- ($(daq.west)+(0,0.92)$);
+  \draw[electricline] (bpd2.east) -- ++(0.75,0) |- ($(daq.west)+(0,-0.92)$);
+  \foreach \yy in {-1.20,-0.92,-0.64}
+    \draw[white,line width=1.0pt] ($(daq.center)+(-0.46,\yy)$) -- ($(daq.center)+(0.46,\yy)$);
+
+  \draw[controlline]
+    (fpga.west) -- (1.00,1.45) -- (1.00,3.15) -- (8.25,3.15) -- (modulator.south);
+  \draw[controlline]
+    (fpga.east) -- (6.60,1.45) -- (6.60,0.72) -- (27.20,0.72) --
+    (27.20,4.35) -- ($(daq.south)+(0.35,0)$);
+
+  % Labels
+  \node[labeltext] at (3.35,12.18) {连续光};
+  \node[labeltext] at (6.25,10.18) {信号光};
+  \node[labeltext,rotate=90] at (4.20,8.95) {参考光};
+  \node[labeltext,rotate=90] at (13.77,8.93) {散射光};
+  \node[labeltext,anchor=west] at (21.15,11.92) {待测光纤};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (18.54,8.57) {P+};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (19.28,7.57) {P$-$};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (18.64,5.12) {S+};
+  \node[labeltext,fill=white,inner sep=1.5pt] at (19.30,6.58) {S$-$};
+  \node[labeltext,anchor=south] at (5.00,3.30) {脉冲调制与AOM射频门控};
+  \node[labeltext] at (17.20,0.30) {同步触发信号};
+
+  % Optical and electrical ports
+  \fill[reference] (probeFiber.east) circle (0.06);
+  \fill[probe] (probeFiber.west) circle (0.06);
+  \fill[electric] ($(daq.west)+(0,0.92)$) circle (0.055);
+  \fill[electric] ($(daq.west)+(0,-0.92)$) circle (0.055);
+\end{tikzpicture}
+\end{document}

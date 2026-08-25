@@ -1,19 +1,55 @@
-\chapter{基于收发一体化光电模组的DAS解调与系统性能验证}
+\chapter{DAS系统验证与结果分析}
 
 \section{引言}
 
-\section{DAS实验系统与数据采集}
+\section{实验条件与数据采集}
+
+系统总体结构与器件实现已在第三章给出，本章沿用第三章建立的SOA--AOM--DAQ统一时序，不再重复系统组成；本节仅报告第四章振动验证实验的具体条件，包括测试光纤与PZT扰动设置，以及采样率、触发与数据规模。
+
+\subsection{测试光纤与PZT扰动设置}
+
+\subsection{采样率、触发与数据规模}
 
 \section{双偏振接收信号与通道标定}
 \label{sec:chap4_channel_calibration}
 
-\section{DAS数字解调流程与固定参数配置}
+\subsection{双偏振接收信号特征}
+
+\subsection{通道幅值与直流偏置标定}
+
+\subsection{I/Q方向与时延标定}
+
+\section{固定数字解调流程与参数配置}
 \label{sec:chap4_fixed_demod}
+
+数字下变频、I/Q提取、复共轭差分与双偏振合成的原理已在第二章给出，本章按既定流程处理第四章采集的数据，不再讨论算法优劣；本节仅给出唯一处理流程的实现及其固定参数配置。
+
+\subsection{数字解调流程实现}
+
+\subsection{解调参数配置}
 
 \section{振动定位、频率与波形恢复}
 
-\section{端到端DAS传感性能评价}
+\subsection{振动时空定位}
+
+\subsection{频率恢复}
+
+\subsection{波形恢复}
+
+\section{分立式与集成式系统端到端传感性能对比}
+
+分立式与集成式系统的光功率、损耗、隔离、串扰、通道一致性与拍频质量等硬件指标已在第3.6节比较，本节仅在完全相同的采集与固定解调流程下，比较二者的端到端振动传感结果。
+
+\subsection{振动定位对比}
+
+\subsection{频率与波形对比}
 
 \section{测量重复性与长期稳定性分析}
+
+第3.6节报告的是模组输出光功率、拍频与通道等硬件层面的稳定性，本节报告振动测量结果本身的重复性与长期漂移。
+
+\subsection{测量重复性}
+
+\subsection{长期稳定性}
 
 \section{本章小结}

@@ -4,14 +4,13 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
-from matplotlib.patches import FancyArrowPatch, Rectangle
-from PIL import Image, ImageOps
+from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Rectangle
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
 IMAGES = ROOT / "images"
 SOURCES = IMAGES / "sources"
-PAPER_RENDER = ROOT / "tmp" / "pdfs" / "cheng2023"
 
 FONT_REGULAR = Path(r"C:\Windows\Fonts\msyh.ttc")
 FONT_BOLD = Path(r"C:\Windows\Fonts\msyhbd.ttc")
@@ -46,35 +45,170 @@ def prepare_application_photos() -> None:
             panel.save(IMAGES / output_name, quality=94, subsampling=0, dpi=(300, 300))
 
 
-def prepare_literature_photos() -> None:
-    """
-    Extract only the photograph panels from Cheng et al. (2023), Fig. 1c
-    and the inset of Fig. 4a. The page crops are normalized coordinates so
-    the extraction remains stable if the Poppler render resolution changes.
-    """
-    crops = [
-        (
-            PAPER_RENDER / "hi-2.png",
-            IMAGES / "chap1_literature_photonic_chip.png",
-            (0.596, 0.703, 0.794, 0.735),
-        ),
-        (
-            PAPER_RENDER / "hi-5.png",
-            IMAGES / "chap1_literature_packaged_eom_aom.png",
-            (0.206, 0.125, 0.279, 0.194),
-        ),
+def draw_packaged_eom_aom() -> None:
+    """Draw packaged EOM and AOM devices in the same style as the DFB laser."""
+    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 7)
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+    # Optical pigtails use the same two-tone treatment as the DFB illustration.
+    fiber_segments = [
+        ((0.2, 1.3), (3.5, 3.5)),
+        ((5.35, 5.95), (3.5, 3.5)),
+        ((6.05, 6.65), (3.5, 3.5)),
+        ((10.85, 11.8), (3.5, 3.5)),
     ]
-    for source_path, output_path, (x0, y0, x1, y1) in crops:
-        with Image.open(source_path) as page:
-            box = (
-                round(page.width * x0),
-                round(page.height * y0),
-                round(page.width * x1),
-                round(page.height * y1),
-            )
-            panel = page.crop(box).convert("RGB")
-            panel = ImageOps.expand(panel, border=8, fill="white")
-            panel.save(output_path, dpi=(600, 600))
+    for (x0, x1), (y0, y1) in fiber_segments:
+        ax.plot([x0, x1], [y0, y1], color="#f2c230", linewidth=5.0, solid_capstyle="round")
+        ax.plot([x0, x1], [y0, y1], color="#fff1a8", linewidth=1.2, solid_capstyle="round")
+
+    # EOM: compact silver package with electrical pins and an identification plate.
+    for x in (2.0, 2.65, 3.30, 3.95, 4.60):
+        ax.add_patch(Rectangle((x - 0.08, 1.18), 0.16, 0.92, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
+        ax.add_patch(Rectangle((x - 0.08, 4.90), 0.16, 0.92, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
+    ax.add_patch(Rectangle((1.0, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    ax.add_patch(Rectangle((5.18, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    ax.add_patch(
+        FancyBboxPatch(
+            (1.25, 1.95),
+            4.15,
+            3.10,
+            boxstyle="round,pad=0.03,rounding_size=0.16",
+            facecolor="#c5cbd0",
+            edgecolor="#52595f",
+            linewidth=1.4,
+        )
+    )
+    ax.add_patch(Rectangle((1.62, 2.27), 3.41, 2.46, facecolor="#aeb6bc", edgecolor="#626a70", linewidth=1.0))
+    for x in (1.52, 5.13):
+        for y in (2.25, 4.75):
+            ax.add_patch(Circle((x, y), 0.13, facecolor="#555d62", edgecolor="#30363a", linewidth=0.7))
+            ax.add_patch(Circle((x, y), 0.05, facecolor="#d9dde0", edgecolor="none"))
+    ax.add_patch(
+        FancyBboxPatch(
+            (2.0, 2.72),
+            2.65,
+            1.56,
+            boxstyle="round,pad=0.03,rounding_size=0.08",
+            facecolor="#eef1f3",
+            edgecolor="#737b80",
+            linewidth=1.0,
+        )
+    )
+    ax.text(3.325, 3.72, "EOM", ha="center", va="center", fontsize=17, weight="bold", color="#174f78")
+    ax.text(3.325, 3.18, "1550 nm", ha="center", va="center", fontsize=10.5, color="#3e474d")
+    ax.plot([2.42, 4.23], [2.91, 2.91], color="#d43b32", linewidth=1.3)
+    ax.add_patch(FancyArrowPatch((3.05, 2.91), (2.50, 2.91), arrowstyle="-|>", mutation_scale=9, color="#d43b32"))
+
+    # AOM: blue anodized package, drawn with matching geometry and line weights.
+    ax.add_patch(Rectangle((6.30, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    ax.add_patch(Rectangle((10.68, 3.18), 0.52, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    ax.add_patch(
+        FancyBboxPatch(
+            (6.55, 1.95),
+            4.35,
+            3.10,
+            boxstyle="round,pad=0.03,rounding_size=0.16",
+            facecolor="#75a9c1",
+            edgecolor="#485a63",
+            linewidth=1.4,
+        )
+    )
+    ax.add_patch(Rectangle((6.93, 2.27), 3.59, 2.46, facecolor="#5f94ad", edgecolor="#526b77", linewidth=1.0))
+    for x in (6.82, 10.63):
+        for y in (2.25, 4.75):
+            ax.add_patch(Circle((x, y), 0.13, facecolor="#555d62", edgecolor="#30363a", linewidth=0.7))
+            ax.add_patch(Circle((x, y), 0.05, facecolor="#d9dde0", edgecolor="none"))
+    ax.add_patch(
+        FancyBboxPatch(
+            (7.28, 2.72),
+            2.90,
+            1.56,
+            boxstyle="round,pad=0.03,rounding_size=0.08",
+            facecolor="#edf3f5",
+            edgecolor="#60737c",
+            linewidth=1.0,
+        )
+    )
+    ax.text(8.73, 3.72, "AOM", ha="center", va="center", fontsize=17, weight="bold", color="#174f78")
+    ax.text(8.73, 3.18, "80 MHz", ha="center", va="center", fontsize=10.5, color="#3e474d")
+    ax.plot([7.70, 9.76], [2.91, 2.91], color="#d43b32", linewidth=1.3)
+    ax.add_patch(FancyArrowPatch((8.42, 2.91), (7.78, 2.91), arrowstyle="-|>", mutation_scale=9, color="#d43b32"))
+
+    # RF input connector distinguishes the AOM from the optical EOM package.
+    ax.add_patch(Rectangle((8.48, 1.53), 0.50, 0.45, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+    ax.add_patch(Rectangle((8.57, 1.03), 0.32, 0.50, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.8))
+
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01)
+    fig.savefig(
+        IMAGES / "chap1_literature_packaged_eom_aom.png",
+        dpi=300,
+        bbox_inches="tight",
+        pad_inches=0.04,
+        facecolor="white",
+    )
+    plt.close(fig)
+
+
+def draw_dfb_laser() -> None:
+    """Draw a clean butterfly-packaged DFB laser for the chapter overview."""
+    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 7)
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+    # Fiber pigtail and strain relief.
+    ax.plot([0.2, 2.1], [3.5, 3.5], color="#f2c230", linewidth=5.0, solid_capstyle="round")
+    ax.plot([0.2, 2.1], [3.5, 3.5], color="#fff1a8", linewidth=1.2, solid_capstyle="round")
+    ax.add_patch(Rectangle((1.75, 3.18), 0.65, 0.64, facecolor="#8d9499", edgecolor="#4f5559", linewidth=1.0))
+
+    # Fourteen electrical pins along the package sides.
+    pin_x = [2.75, 3.65, 4.55, 5.45, 6.35, 7.25, 8.15]
+    for x in pin_x:
+        ax.add_patch(Rectangle((x - 0.09, 0.45), 0.18, 1.28, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
+        ax.add_patch(Rectangle((x - 0.09, 5.27), 0.18, 1.28, facecolor="#d8bd68", edgecolor="#806d32", linewidth=0.7))
+
+    # Metal flange, mounting holes, and raised package body.
+    ax.add_patch(
+        FancyBboxPatch(
+            (2.0, 1.55),
+            8.0,
+            3.9,
+            boxstyle="round,pad=0.03,rounding_size=0.18",
+            facecolor="#c5cbd0",
+            edgecolor="#52595f",
+            linewidth=1.4,
+        )
+    )
+    ax.add_patch(Rectangle((2.65, 1.85), 6.7, 3.3, facecolor="#aeb6bc", edgecolor="#626a70", linewidth=1.0))
+    for x in (2.35, 9.65):
+        for y in (1.95, 5.05):
+            ax.add_patch(Circle((x, y), 0.18, facecolor="#555d62", edgecolor="#30363a", linewidth=0.8))
+            ax.add_patch(Circle((x, y), 0.07, facecolor="#d9dde0", edgecolor="none"))
+
+    # Identification plate and optical-axis mark.
+    ax.add_patch(
+        FancyBboxPatch(
+            (3.35, 2.35),
+            5.3,
+            2.3,
+            boxstyle="round,pad=0.04,rounding_size=0.10",
+            facecolor="#eef1f3",
+            edgecolor="#737b80",
+            linewidth=1.0,
+        )
+    )
+    ax.text(6.0, 3.85, "DFB LASER", ha="center", va="center", fontsize=19, weight="bold", color="#174f78")
+    ax.text(6.0, 3.15, "1550 nm", ha="center", va="center", fontsize=13, color="#3e474d")
+    ax.plot([4.3, 7.7], [2.78, 2.78], color="#d43b32", linewidth=1.5)
+    ax.add_patch(FancyArrowPatch((5.35, 2.78), (4.45, 2.78), arrowstyle="-|>", mutation_scale=10, color="#d43b32"))
+
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01)
+    fig.savefig(IMAGES / "chap1_dfb_laser.png", dpi=300, bbox_inches="tight", pad_inches=0.04, facecolor="white")
+    plt.close(fig)
 
 
 def add_box(
@@ -167,7 +301,7 @@ def draw_research_route() -> None:
         (0.08, 0.75),
         0.84,
         0.095,
-        "理论基础（第2章）\nφ-OTDR传感机理  |  DFB-LD/SOA工作特性  |  AOM移频与外差探测  |  数字相位解调",
+        "理论基础（第2章）\nφ-OTDR传感机理  |  ECL--SOA工作特性  |  AOM移频与外差探测  |  数字相位解调",
         no_fill,
         line_color,
         fontsize=8.7,
@@ -182,8 +316,8 @@ def draw_research_route() -> None:
         (0.08, 0.49),
         0.40,
         0.215,
-        "分光集成器件发射链路\n"
-        "内部集成：DFB-LD + SOA\n"
+        "双输出ECL--SOA发射链路\n"
+        "LD端参考光 + SOA端脉冲信号光\n"
         "驱动电流、光脉冲、消光比与ASE\n"
         "外差拍频与SOA-AOM-DAQ协同门控",
         "white",
@@ -197,10 +331,10 @@ def draw_research_route() -> None:
         (0.52, 0.49),
         0.40,
         0.215,
-        "DAS收发一体化光电模组\n"
-        "AOM、耦合器、环形器、PBS与BPD\n"
-        "光路拓扑、接口、封装与通道一致性\n"
-        "分立式基线与模组光电性能对比",
+        "DAS一体化收发模组\n"
+        "传统EDFA与本文ECL--SOA光路对比\n"
+        "分立基线、集成封装与统一接口\n"
+        "等条件光电及传感性能验证",
         "white",
         line_color,
         fontsize=8.6,
@@ -223,7 +357,7 @@ def draw_research_route() -> None:
         (0.12, 0.34),
         0.76,
         0.105,
-        "固定解调流程与端到端验证（第4章）\n双通道标定  →  数字下变频与I/Q提取  →  复共轭差分与双偏振合成  →  PZT振动恢复",
+        "数字相位解调与传感验证（第4章）\n双通道标定  →  数字下变频与I/Q提取  →  复共轭差分与双偏振合成  →  PZT振动恢复",
         no_fill,
         line_color,
         fontsize=8.6,
@@ -252,7 +386,7 @@ def draw_research_route() -> None:
         (0.12, 0.08),
         0.76,
         0.075,
-        "研究结论（第5章）：发射特性—光路集成—固定解调—传感验证",
+        "研究结论（第5章）：发射特性—光路集成—信号解调—传感验证",
         no_fill,
         line_color,
         fontsize=9.0,
@@ -268,7 +402,8 @@ def draw_research_route() -> None:
 def main() -> None:
     IMAGES.mkdir(parents=True, exist_ok=True)
     prepare_application_photos()
-    prepare_literature_photos()
+    draw_packaged_eom_aom()
+    draw_dfb_laser()
     draw_research_route()
 
 

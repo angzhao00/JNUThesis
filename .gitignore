@@ -19,6 +19,10 @@ build/
 out/
 tmp/
 
+# Python caches
+__pycache__/
+*.py[cod]
+
 # Large oscilloscope captures stay local; keep the compact processed summary.
 /data/chap3/3.3_soa_characterization/3.3.1-2/*.csv
 !/data/chap3/3.3_soa_characterization/3.3.1-2/processed_soa_characterization_summary.csv

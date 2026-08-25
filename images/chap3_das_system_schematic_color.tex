@@ -69,8 +69,8 @@
   \fill[white] (0,0) rectangle (25.2,13.0);
 
   % Main hardware blocks
-  \node[device,fill=laserfill,minimum width=2.35cm,minimum height=1.35cm] (laser) at (2.8,11.15) {分光集成器件};
-  \node[device,fill=aomfill,minimum width=2.25cm,minimum height=1.45cm] (aom) at (7.4,11.15) {\begin{tabular}{c}80 MHz\\[-1mm]AOM\end{tabular}};
+  \node[device,fill=laserfill,minimum width=2.65cm,minimum height=1.35cm] (laser) at (2.8,11.15) {双输出ECL--SOA};
+  \node[device,fill=aomfill,minimum width=2.25cm,minimum height=1.45cm] (aom) at (7.4,11.15) {AOM};
   \node[device,fill=fiberfill,minimum width=2.65cm,minimum height=1.35cm] (probeFiber) at (15.6,11.15) {探测光纤};
 
   \node[device,fill=pbsfill,minimum width=1.65cm,minimum height=1.25cm] (pbsU) at (14.5,8.10) {PBS};
@@ -179,8 +179,8 @@
 
   % Labels
   \node[labeltext,anchor=south west] at (0.72,12.00) {调制信号};
-  \node[labeltext] at (4.68,10.62) {信号光};
-  \node[labeltext,rotate=90] at (2.25,8.95) {参考光};
+  \node[labeltext] at (5.20,10.62) {SOA端信号光};
+  \node[labeltext,rotate=90] at (2.25,8.95) {LD端参考光};
   \node[labeltext,rotate=90] at (11.17,8.93) {散射光};
   \node[labeltext,anchor=west] at (19.97,11.92) {待测光纤};
   \node[labeltext,fill=white,inner sep=1.5pt] at (15.94,8.57) {P+};
