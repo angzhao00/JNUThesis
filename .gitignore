@@ -15,7 +15,8 @@
 *.xdv
 
 # Common build folders
-build/
+build/*
+!build/JNUThesis.pdf
 out/
 tmp/
 
