@@ -237,6 +237,16 @@
 %% 设置itemize的距离
 \setlist[itemize]{itemsep=0pt, parsep=0pt, left=24pt}
 
+%% 未完成章节的可见写作计划；完成正文后删除对应环境。
+\newenvironment{writingplan}{%
+    \par\begingroup\small
+    \noindent\textbf{写作计划（待完成）}
+    \begin{enumerate}[label=\arabic*., leftmargin=2em, itemsep=2pt, parsep=0pt, topsep=4pt]
+}{%
+    \end{enumerate}
+    \endgroup\par
+}
+
 
 
 %% 重设每章结束后的\cleardoublepage命令(twoside)

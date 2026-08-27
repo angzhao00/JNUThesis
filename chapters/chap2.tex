@@ -188,7 +188,7 @@ L_{\max}\leq\frac{c}{2n_g f_r}.
 \label{eq:max_range}
 \end{equation}
 
-对固定位置的动态信号而言，脉冲重复频率同时构成慢时间采样率。若目标振动最高频率为$f_v$，在不考虑抗混叠裕量时至少应满足$f_r>2f_v$。实际系统还需为滤波过渡带、时钟抖动和相位展开预留裕量。因而，长距离测量要求降低重复频率，而高频振动测量要求提高重复频率，两者形成DAS系统的基本矛盾\cite{masoudi2016review,muanenda2018advances,rao2021recent}。
+对固定位置的动态信号而言，脉冲重复频率同时构成慢时间采样率。若目标振动最高频率为$f_v$，在不考虑抗混叠裕量时至少应满足$f_r>2f_v$。实际系统还需为滤波过渡带、时钟抖动和相位展开预留裕量。因而，长距离测量要求降低重复频率，而高频振动测量要求提高重复频率，两者形成DAS系统的基本矛盾，长距离φ-OTDR系统研究亦需在该约束下综合优化探测方案\cite{masoudi2016review,muanenda2018advances,rao2021recent,sha2018longhaul_thesis}。
 
 此外，采样点数$N_s$、采样率$f_s$与可记录距离之间满足
 
@@ -514,7 +514,7 @@ S[n]=I[n]+jQ[n]=\hat A[n]\exp\!\left[j\hat\phi[n]\right].
 \label{eq:atan2}
 \end{equation}
 
-数字下变频、模拟I/Q、Sagnac平衡干涉和光学90度混合器是获得相位或复信号的不同实现形式\cite{fu2018iq,jiang2019analog,zhong2021sagnac}。滤波器应覆盖有效拍频偏移和信号调制边带，同时抑制镜像、直流和带外噪声。中心频率错误、带宽过窄或过宽均可能损伤复包络\cite{zhang2025if,zhu2024downsampling}。
+数字下变频、模拟I/Q、Sagnac平衡干涉和光学90度混合器是获得相位或复信号的不同实现形式，I/Q相位解调算法在不同实现条件下的适用性也得到系统比较\cite{fu2018iq,jiang2019analog,zhong2021sagnac,kong2025iq_thesis}。滤波器应覆盖有效拍频偏移和信号调制边带，同时抑制镜像、直流和带外噪声。中心频率错误、带宽过窄或过宽均可能损伤复包络\cite{zhang2025if,zhu2024downsampling}。
 
 \subsection{频率失配、I/Q误差与差分解调}
 
@@ -542,11 +542,11 @@ j\left[
 
 若I/Q通道存在幅度不平衡$\epsilon_g$、相位误差$\epsilon_\phi$、直流偏置和时延差$\Delta\tau$，观测复信号将由圆形轨迹变成偏移椭圆，并产生随频率变化的相位误差。另一方面，拍频漂移会在下变频后留下随时间累积的残余相位，近期研究已从频率漂移补偿角度改善φ-OTDR解调\cite{zhao2024frequency}。在双通道处理前应先进行直流去除、幅值归一、I/Q方向确认和时延校准。
 
-本文对距离维信号采用式\eqref{eq:complex_difference}所示的复共轭差分，在相位求解前保持复数运算形式。低SNR区的相位概率分布会趋于发散，差分和相位展开无法恢复原本不存在的可靠信息\cite{lu2021detection,lu2022phaseerror,lu2023phase}；大动态应变场景还需要处理相邻样点相位增量超过$\pi$时的解缠绕约束\cite{ran2025dynamic_thesis}。第4章将在实验参数表中给出空间步长、差分标距、滤波参数和有效区域，并在统一参数配置下评价系统性能。
+本文对距离维信号采用式\eqref{eq:complex_difference}所示的复共轭差分，在相位求解前保持复数运算形式。低SNR区的相位概率分布会趋于发散，差分和相位展开无法恢复原本不存在的可靠信息\cite{lu2021detection,lu2022phaseerror,lu2023phase}；对距离--时间二维相位场，二维相位解卷绕方法可同时利用空间与时间方向的一致性抑制展开误差\cite{sun2024unwrapping_thesis}；大动态应变场景还需要处理相邻样点相位增量超过$\pi$时的解缠绕约束\cite{ran2025dynamic_thesis}。第4章将在实验参数表中给出空间步长、差分标距、滤波参数和有效区域，并在统一参数配置下评价系统性能。
 
 \subsection{瑞利干涉衰落与低幅值相位失效}
 
-式\eqref{eq:rayleigh_sum}中的多个随机散射相量可能在某些距离位置近似抵消，使合成复包络幅值$A=|S|$接近零。这种由相干瑞利散射随机叠加产生的局部深衰落称为瑞利干涉衰落或相干衰落。它不同于光纤平均损耗：平均损耗随距离缓慢变化，而干涉衰落表现为叠加在平均包络上的随机深谷，且衰落位置会随光频率、温度和应变状态变化\cite{tu2020fading,cheng2023subband,cui2021interference,lei2025fading_cn}。
+式\eqref{eq:rayleigh_sum}中的多个随机散射相量可能在某些距离位置近似抵消，使合成复包络幅值$A=|S|$接近零。这种由相干瑞利散射随机叠加产生的局部深衰落称为瑞利干涉衰落或相干衰落。它不同于光纤平均损耗：平均损耗随距离缓慢变化，而干涉衰落表现为叠加在平均包络上的随机深谷，且衰落位置会随光频率、温度和应变状态变化\cite{tu2020fading,cheng2023subband,cui2021interference,lei2025fading_cn,shan2019key_thesis}。
 
 将下变频后的I/Q噪声近似为方差相同且相互独立的高斯噪声，在高SNR小误差条件下，相位估计方差与复包络幅值平方近似成反比：
 
@@ -588,7 +588,7 @@ P_{\Sigma}=|S_x|^2+|S_y|^2,
   \label{fig:chap2_fading_mechanisms}
 \end{figure}
 
-但相位融合不能简单相加，因为两通道可能具有不同增益、直流偏置、I/Q方向、时延和固定相位。已有研究采用偏振分集接收、相干MIMO、偏振旋转和多维融合降低衰落\cite{dorize2018polarization,mompo2019distributed,tu2020fading,guerrier2020mimo,gorajoobi2022polarization,xie2023fading}。
+但相位融合不能简单相加，因为两通道可能具有不同增益、直流偏置、I/Q方向、时延和固定相位。已有研究采用偏振分集接收、相干MIMO、偏振旋转和多维融合降低衰落\cite{dorize2018polarization,mompo2019distributed,tu2020fading,guerrier2020mimo,gorajoobi2022polarization,xie2023fading,sun2023polarization_thesis}。
 
 本文采用功率加权双偏振合成。设校准后两通道复差分量为$C_x$和$C_y$，一种基于幅值可信度的合成形式为
 

@@ -3,7 +3,8 @@
 > 编译日期：2026-07-27  
 > 测试入口：`literature/review_draft_test.tex`  
 > 编译链：XeLaTeX + BibTeX + XeLaTeX × 2  
-> 参考文献样式：`gbt7714-2015.bst`
+> 参考文献样式：`gbt7714-2015.bst`  
+> 注：本报告记录2026-07-27审阅稿编译时的状态（当时工作库85篇）。当前工作库已扩充至93篇、其中学位论文12篇，最新统计见`reference_collection_report.md`。
 
 ## 结果
 
