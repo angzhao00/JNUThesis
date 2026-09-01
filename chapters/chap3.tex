@@ -65,34 +65,84 @@ BPD1和BPD2的输出分别接入DAQ的两个采集通道。FPGA向集成SOA的EC
 \subsection{系统关键器件选择与参数匹配}
 \label{sec:chap3_component_selection}
 
-\begin{writingplan}
-  \item 依据1550~nm工作波长、80~MHz外差中频、无EDFA发射和双偏振接收要求，说明ECL--SOA、AOM、BPD及DAQ的选型与带宽、功率和接口匹配。
-  \item 用一张表列出器件型号、关键标称值、实测值及参数来源，厂家数据与本文测试结果分开标注。
-  \item 仅说明所选器件满足系统需求，不重复第二章器件原理，也不宣称为全局最优方案。
-\end{writingplan}
+器件选型围绕1550~nm工作波长、80~MHz外差中频和双偏振同步接收三项要求展开。发射端需要同时提供窄线宽连续参考光和较高峰值功率的脉冲信号光；移频器件需要在1550~nm处工作，并使移频量落入接收机和采集系统的有效带宽；接收端则需要对P、S两个偏振分量分别进行平衡探测和同步采样。表\ref{tab:chap3_key_components}汇总了本系统关键器件及参数。表中“规格书”对应厂家资料给出的标称值，“本文配置”对应实际搭建系统采用的器件或工作参数。
+
+\begin{table}[htbp]
+  \centering
+  \caption{DAS系统关键器件及参数匹配}
+  \label{tab:chap3_key_components}
+  \renewcommand{\arraystretch}{1.25}
+  \small
+  \begin{tabular}{p{0.13\textwidth}p{0.18\textwidth}p{0.30\textwidth}p{0.27\textwidth}}
+    \toprule
+    器件 & 型号或来源 & 关键标称参数 & 本文采用参数或功能 \\
+    \midrule
+    ECL--SOA激光器 & FL-XS模块，内置FL-1S线宽等级激光器 & 中心波长1550~nm；洛伦兹线宽小于3~kHz；信号光脉冲峰值功率100--250~mW；参考光功率5~mW；脉宽5--250~ns；开关消光比70~dB & SOA端输出脉冲信号光，LD端输出连续参考光；外调制形成探测脉冲 \\
+    AOM及驱动 & 上海清津AOM；自研射频驱动 & 工作波长1550~nm；标称驱动频率80~MHz & 信号光支路一阶衍射移频；自研驱动的频率和接口规格与80~MHz配套驱动一致 \\
+    PBS & 铭创光电 & 1550~nm波段偏振分束 & 将两路互补干涉光分别分解为P、S正交偏振分量 \\
+    BPD & 自制双路平衡探测模块 & InGaAs探测；工作波长800--1700~nm；响应度0.9~A/W；单端饱和输入光功率200~$\upmu$W；50~$\Omega$电输出 & 有效工作频带60--80~MHz；光电转换增益120~kV/W；P、S通道各配置一只 \\
+    DAQ & 上海比宣7821采集卡 & 双通道高速数据采集 & 同步采集P、S两路BPD输出，并接收FPGA触发以确定采样起点 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+图\ref{fig:chap3_key_device_photos}给出了FL-XS激光模块和PD-500B平衡光电探测模块的实物。其中，FL-XS模块对应本系统的双输出ECL--SOA光源；PD-500B用于展示自制BPD所参考的光电探测结构和接口形式。
+
+\begin{figure}[htbp]
+  \centering
+  \subfloat[FL-XS激光模块]{\includegraphics[width=0.36\textwidth]{images/chap3_flxs_module_photo.png}}
+  \hspace{0.08\textwidth}
+  \subfloat[PD-500B平衡光电探测模块]{\includegraphics[width=0.36\textwidth]{images/chap3_bpd_reference_photo.png}}
+  \caption{系统关键光电器件实物图}
+  \label{fig:chap3_key_device_photos}
+\end{figure}
+
+FL-XS模块内部采用FL-1S线宽等级的ECL激光器，其1550~nm中心波长与传感光纤、AOM、PBS及InGaAs探测器的工作波段一致。SOA端的标称脉冲峰值功率为100--250~mW，满足探测脉冲的功率输出需求；LD端提供5~mW连续参考光，避免参考支路经过SOA门控。规格书给出的5--250~ns脉宽范围覆盖本文采用的100~ns设置，相应的理论空间分辨率约为10~m。规格书在SOA电流800~mA、关断偏压$-2$~V条件下给出70~dB开关消光比；第3.3.1节和第3.3.2节进一步给出本文工作条件下的输出功率、脉冲宽度和静态消光特性。
+
+AOM安装在SOA信号光支路，上海清津器件的1550~nm工作波长与激光器输出相匹配，80~MHz射频驱动使一阶衍射信号光与未移频参考光之间形成约80~MHz的外差中频。本文采用自研AOM驱动，其工作频率和接口规格按照上海清津80~MHz配套驱动设置。该频率高于低频技术噪声集中的频段，同时处于自制BPD的60--80~MHz有效工作频带内。80~MHz位于该接收频带上缘，后续实验通过拍频幅度、频谱峰宽和信噪比评价接收裕量与链路质量。
+
+接收端采用铭创光电PBS和两只自制BPD构成偏振分集平衡接收。PBS的工作波段与1550~nm信号光一致；两只BPD分别接收P、S偏振方向上的互补干涉输出。自制BPD采用InGaAs光电探测结构，工作波长范围、响应度、饱和输入功率和50~$\Omega$输出接口参考PD-500B规格设计，并根据80~MHz外差接收需求将有效工作频带配置为60--80~MHz，将光电转换增益提高至120~kV/W。与PD-500B参考模块的500~MHz带宽和11~kV/W增益相比，该配置以较窄接收频带换取较高电压增益，适用于本文固定中频附近的弱瑞利回波探测。实验将两输入端光功率控制在200~$\upmu$W以内，以保持差分波形和共模抑制性能。
+
+两路BPD的50~$\Omega$电输出接入上海比宣7821采集卡的两个通道，采集卡在同一采样时钟和触发基准下记录P、S偏振信号，使两路数据保持统一的帧起点和采样时刻。对于80~MHz实信号，采样率首先应满足$f_s>2f_b$的奈奎斯特条件，并需为数字下变频、滤波和中频偏移保留过渡带；本文的具体采样率、记录长度和触发延迟将在第四章实验参数表中给出。FPGA同时产生SOA调制、AOM射频门控和DAQ触发信号，使器件的光学带宽、电学带宽及时间窗口在同一控制基准下匹配。上述器件共同构成满足本文工作波长、外差中频、发射功率和双偏振同步接收要求的DAS光电链路。
 
 \section{集成SOA的ECL激光器工作特性及其对拍频信号的影响}
 
 \subsection{SOA驱动电流与输出脉冲特性}
 
-实验采用中心波长1550~nm、静态线宽小于3~kHz的FL-1S型ECL--SOA激光器。ECL电流和TEC温度分别固定为200~mA和30~$^\circ$C，SOA关断偏压为$-5$~V，电脉冲宽度和重复频率为100~ns和2~kHz。SOA脉冲电流在200--2000~mA范围内以100~mA步进扫描；光路衰减固定为42~dB，采用500~MHz BPD和示波器记录波形，每个电流点统计399个脉冲。
+实验采用中心波长1550~nm、静态线宽小于3~kHz的FL-1S型ECL--SOA激光器。ECL电流和TEC温度分别固定为200~mA和30~$^\circ$C，SOA关断偏压为$-5$~V，电脉冲宽度和重复频率为100~ns和2~kHz。SOA脉冲电流在200--2000~mA范围内以100~mA步进扫描；SOA输出端至PD-500B探测器输入端的总光路衰减为38~dB，探测器输出与示波器采用50~$\Omega$匹配连接。每个电流点分别保存4~GSa/s高分辨率单脉冲记录和采样间隔20~ns的长时间记录；前者用于展示脉冲边沿和平台形状，后者覆盖399个完整脉冲，用于重复性、周期和表观脉宽统计。
 
-受功率计动态测量范围限制，200--600~mA范围采用功率计直接测量，高电流范围由BPD峰值电压换算。对25组功率--电压数据进行最小二乘拟合，得到
+峰值功率不再由功率计数据拟合外推，而由探测器在50~$\Omega$负载下的光电转换增益直接计算。PD-500B规格书给出的响应度为$R=0.9$~A/W，光电转换增益为$G_{50\,\Omega}=11$~kV/W，后者已经包含光电流转换和跨阻放大，因此不能再与响应度重复相乘。其等效跨阻为
 \begin{equation}
-  P_{\mathrm{peak}}=0.5153V_{\mathrm{peak}}+4.990,
-  \qquad V_{\mathrm{peak}}[\mathrm{mV}],\;P_{\mathrm{peak}}[\mathrm{mW}],
-  \label{eq:soa_power_calibration}
+  Z_{\mathrm{eq}}=\frac{G_{50\,\Omega}}{R}
+  =\frac{11\times10^3}{0.9}
+  \approx 12.22~\mathrm{k}\Omega.
+  \label{eq:pd_equivalent_transimpedance}
 \end{equation}
-拟合决定系数$R^2=0.9965$，均方根误差为2.38~mW。图\ref{fig:chap3_soa_current_characterization}(c)区分功率计直测值与BPD换算值，误差棒表示5轮扫描的标准差。
+若示波器测得扣除基线后的峰值电压为$V_{\mathrm{scope}}$，探测器输入端峰值光功率$P_{\mathrm{PD}}$及衰减前SOA输出端峰值功率$P_{\mathrm{SOA}}$分别为
+\begin{align}
+  P_{\mathrm{PD}}&=\frac{V_{\mathrm{scope}}}{G_{50\,\Omega}},\\
+  P_{\mathrm{SOA}}&=P_{\mathrm{PD}}10^{L/10}
+  =\frac{V_{\mathrm{scope}}}{G_{50\,\Omega}}10^{L/10},
+  \label{eq:soa_power_transimpedance}
+\end{align}
+其中，$L$为SOA输出参考面至探测器输入参考面的总光衰减。代入$L=38$~dB和$G_{50\,\Omega}=11$~kV/W，可得
+\begin{equation}
+  P_{\mathrm{SOA}}[\mathrm{mW}]
+  =0.5736V_{\mathrm{scope}}[\mathrm{mV}].
+  \label{eq:soa_power_numerical}
+\end{equation}
+图\ref{fig:chap3_soa_current_characterization}(c)给出按式\eqref{eq:soa_power_transimpedance}计算的结果，并保留200--600~mA范围内的功率计读数作为独立校核，误差棒表示5轮扫描的标准差。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{images/chap3_soa_current_characterization.pdf}
-  \caption[不同SOA脉冲电流下的输出脉冲与重复性表征]{不同SOA脉冲电流下的输出脉冲与重复性表征：（a）输出脉冲平均波形；（b）5轮正向扫描的BPD峰值电压及反向扫描结果；（c）峰值光功率，光功率计直测与BPD标定换算；（d）跨轮与脉冲间变异系数及50\%阈值表观脉宽。}
+  \caption[不同SOA脉冲电流下的输出脉冲与重复性表征]{不同SOA脉冲电流下的输出脉冲与重复性表征：（a）4~GSa/s高分辨率单脉冲波形；（b）5轮正向扫描的BPD峰值电压及反向扫描结果；（c）由PD-500B规格增益和38~dB总衰减计算的峰值光功率及功率计独立校核值；（d）399脉冲长记录所得跨轮与脉冲间变异系数及50\%阈值表观脉宽。}
   \label{fig:chap3_soa_current_characterization}
 \end{figure}
 
-如图\ref{fig:chap3_soa_current_characterization}所示，SOA电流由200~mA增至2000~mA时，BPD峰值电压由86.04~mV增至941.55~mV，峰值光功率由46.03~mW增至490.16~mW。功率单调增加但边际增益下降，与大信号下的增益压缩特征相符\cite{sobhanan2022soa,connelly2023dynamic}，热效应和驱动波形变化不改变增益压缩的主导趋势。5轮扫描的跨轮变异系数为0.22\%--1.85\%，反向扫描相对正向均值的平均绝对偏差为0.80\%，表明峰值输出具有较好重复性。
+如图\ref{fig:chap3_soa_current_characterization}所示，SOA电流由200~mA增至2000~mA时，BPD峰值电压由86.04~mV增至941.55~mV，对应的探测器输入峰值功率为7.82--85.60~$\upmu$W，低于规格书给出的200~$\upmu$W饱和输入功率。按38~dB总衰减反算，SOA输出端峰值功率由49.35~mW增至540.07~mW。功率单调增加但边际增益下降，与大信号下的增益压缩特征相符\cite{sobhanan2022soa,connelly2023dynamic}。5轮扫描的跨轮变异系数为0.22\%--1.85\%，反向扫描相对正向均值的平均绝对偏差为0.80\%，表明峰值电压具有较好重复性。
+
+在具有功率计同期读数的200--600~mA范围内，跨阻增益计算结果依次为49.35、77.28、110.01、142.10和174.02~mW，功率计读数依次为46.03、77.24、105.70、133.14和159.42~mW。两者绝对差异为0.04--14.60~mW，平均绝对差异为6.25~mW；相对差异为0.05\%--9.16\%，平均为5.45\%。两种方法总体一致，且未采用功率计数据拟合换算；高电流点仍表现出一定系统偏差，其来源包括规格增益容差、衰减测量不确定度和功率计脉冲响应差异。
 
 单个电流点的脉冲峰值变异系数为0.68\%--4.74\%，电流不低于400~mA时不超过1.82\%；50\%阈值脉宽为94.14--103.36~ns。实测脉宽与设定的100~ns脉冲宽度一致。SOA电流可有效调节发射功率，最终工作点结合消光、拍频质量和协同时序确定。
 

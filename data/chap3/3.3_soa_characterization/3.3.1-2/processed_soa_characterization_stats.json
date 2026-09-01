@@ -1,16 +1,12 @@
 {
-  "calibration": {
-    "intercept_mW": 4.989990314644108,
-    "slope_mW_per_mV": 0.5152905577531303,
-    "r_squared": 0.9964573749362129,
-    "rmse_mW": 2.3808254371408184,
-    "degrees_of_freedom": 23,
-    "residual_variance": 6.161228002322575,
-    "voltage_mean_mV": 192.73788000000002,
-    "voltage_sxx_mV2": 150115.06635264002,
-    "calibration_n": 25
+  "power_conversion": {
+    "responsivity_A_per_W": 0.9,
+    "loaded_conversion_gain_V_per_W": 11000.0,
+    "equivalent_transimpedance_ohm": 12222.222222222223,
+    "fixed_attenuation_dB": 38.0,
+    "attenuation_factor": 6309.57344480193,
+    "power_factor_mW_per_mV": 0.5735975858910846
   },
-  "fixed_attenuation_dB": 42,
   "current_range_mA": [
     200,
     2000
@@ -25,8 +21,20 @@
     941.5540000000001
   ],
   "power_mean_endpoints_mW": [
-    46.03,
-    490.16387612933494
+    49.35428652186094,
+    540.0731013860942
+  ],
+  "detector_input_power_endpoints_uW": [
+    7.822127272727273,
+    85.59581818181819
+  ],
+  "direct_meter_difference_mW_range": [
+    0.041949942277611285,
+    14.600329997980793
+  ],
+  "direct_meter_difference_pct_range": [
+    0.054311162969460494,
+    9.15840546856153
   ],
   "scan_cv_range_pct": [
     0.21560795208690509,

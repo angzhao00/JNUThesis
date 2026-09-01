@@ -11,11 +11,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from openpyxl import load_workbook
-from scipy import stats
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data" / "chap3" / "3.3_soa_characterization" / "3.3.1-2"
+SCREENSHOT_DIR = ROOT / "data" / "chap3" / "3.3_soa_characterization" / "3.3.1-1"
 XLSX = DATA_DIR / "不同电流下的SOA，输出光功率.xlsx"
 FIGURE_BASE = ROOT / "images" / "chap3_soa_current_characterization"
 SUMMARY_CSV = DATA_DIR / "processed_soa_characterization_summary.csv"
@@ -24,6 +25,22 @@ STATS_JSON = DATA_DIR / "processed_soa_characterization_stats.json"
 DT = 20e-9
 REPETITION_HZ = 2_000.0
 PERIOD_SAMPLES = round(1.0 / (REPETITION_HZ * DT))
+RESPONSIVITY_A_PER_W = 0.9
+LOADED_CONVERSION_GAIN_V_PER_W = 11e3
+FIXED_ATTENUATION_DB = 38.0
+ATTENUATION_FACTOR = 10 ** (FIXED_ATTENUATION_DB / 10)
+POWER_FACTOR_MW_PER_MV = ATTENUATION_FACTOR / LOADED_CONVERSION_GAIN_V_PER_W
+EQUIVALENT_TRANSIMPEDANCE_OHM = (
+    LOADED_CONVERSION_GAIN_V_PER_W / RESPONSIVITY_A_PER_W
+)
+
+SCREENSHOT_CONFIG = {
+    200: ("RigolDS2.png", 0.1),
+    500: ("RigolDS5.png", 0.1),
+    1000: ("RigolDS10.png", 0.2),
+    1500: ("RigolDS15.png", 0.5),
+    2000: ("RigolDS20.png", 0.5),
+}
 
 BLUE = "#2F6B9A"
 ORANGE = "#D97706"
@@ -52,45 +69,6 @@ def load_excel_data():
     }
     reverse_voltage = np.array([reverse[current] for current in currents])
     return currents, voltage_runs, power_runs, reverse_voltage
-
-
-def fit_power_calibration(voltage_runs, power_runs):
-    voltage = voltage_runs[:5].reshape(-1)
-    power = power_runs.reshape(-1)
-    design = np.column_stack([np.ones_like(voltage), voltage])
-    intercept, slope = np.linalg.lstsq(design, power, rcond=None)[0]
-    fitted = intercept + slope * voltage
-    residual = power - fitted
-    ss_res = float(np.sum(residual**2))
-    ss_tot = float(np.sum((power - power.mean()) ** 2))
-    dof = voltage.size - 2
-    residual_variance = ss_res / dof
-    result = {
-        "intercept_mW": float(intercept),
-        "slope_mW_per_mV": float(slope),
-        "r_squared": float(1.0 - ss_res / ss_tot),
-        "rmse_mW": float(np.sqrt(np.mean(residual**2))),
-        "degrees_of_freedom": int(dof),
-        "residual_variance": float(residual_variance),
-        "voltage_mean_mV": float(voltage.mean()),
-        "voltage_sxx_mV2": float(np.sum((voltage - voltage.mean()) ** 2)),
-        "calibration_n": int(voltage.size),
-    }
-    return result
-
-
-def mean_calibration_ci(voltage_mV, calibration):
-    x = np.asarray(voltage_mV, dtype=float)
-    se = np.sqrt(
-        calibration["residual_variance"]
-        * (
-            1.0 / calibration["calibration_n"]
-            + (x - calibration["voltage_mean_mV"]) ** 2
-            / calibration["voltage_sxx_mV2"]
-        )
-    )
-    t_critical = stats.t.ppf(0.975, calibration["degrees_of_freedom"])
-    return t_critical * se
 
 
 def csv_name(current_mA):
@@ -153,6 +131,42 @@ def extract_pulse_metrics(signal):
     }
 
 
+def extract_screenshot_trace(current_mA):
+    filename, volts_per_division = SCREENSHOT_CONFIG[current_mA]
+    image = np.asarray(Image.open(SCREENSHOT_DIR / filename).convert("RGB"))
+    x_pixels = np.arange(350, 920)
+    y_min, y_max = 150, 650
+    trace_y = np.full(x_pixels.size, np.nan)
+
+    for index, x_pixel in enumerate(x_pixels):
+        column = image[y_min:y_max, x_pixel]
+        yellow = (
+            (column[:, 0] > 180)
+            & (column[:, 1] > 180)
+            & (column[:, 2] < 120)
+        )
+        matches = np.flatnonzero(yellow)
+        if matches.size:
+            trace_y[index] = np.median(matches + y_min)
+
+    valid = np.isfinite(trace_y)
+    trace_y = np.interp(x_pixels, x_pixels[valid], trace_y[valid])
+    trace_y = (
+        pd.Series(trace_y)
+        .rolling(window=3, center=True, min_periods=1)
+        .median()
+        .to_numpy()
+    )
+
+    # The screenshot grid is 50 ns/div horizontally and the vertical scale is
+    # recorded per screenshot. Align the trace to the trigger at x=564 px.
+    time_ns = (x_pixels - 564) * (50.0 / 111.5)
+    baseline_region = (time_ns >= -180) & (time_ns <= -40)
+    baseline_y = float(np.median(trace_y[baseline_region]))
+    voltage = (baseline_y - trace_y) * volts_per_division / 77.0
+    return time_ns, voltage
+
+
 def style_axes(ax):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -192,34 +206,28 @@ def main():
     )
 
     currents, voltage_runs, power_runs, reverse_voltage = load_excel_data()
-    calibration = fit_power_calibration(voltage_runs, power_runs)
     voltage_mean = voltage_runs.mean(axis=1)
     voltage_sd = voltage_runs.std(axis=1, ddof=1)
     scan_cv = voltage_sd / voltage_mean * 100
     reverse_delta_pct = (reverse_voltage - voltage_mean) / voltage_mean * 100
 
-    slope = calibration["slope_mW_per_mV"]
-    intercept = calibration["intercept_mW"]
-    converted_runs = intercept + slope * voltage_runs
+    converted_runs = POWER_FACTOR_MW_PER_MV * voltage_runs
     power_mean = converted_runs.mean(axis=1)
     power_sd = converted_runs.std(axis=1, ddof=1)
     direct_mean = power_runs.mean(axis=1)
     direct_sd = power_runs.std(axis=1, ddof=1)
-    power_mean[:5] = direct_mean
-    power_sd[:5] = direct_sd
-    calibration_ci = mean_calibration_ci(voltage_mean, calibration)
+    direct_difference_mW = power_mean[:5] - direct_mean
+    direct_difference_pct = direct_difference_mW / direct_mean * 100
 
     raw_metrics = {}
     representative_currents = {200, 500, 1000, 1500, 2000}
-    representative_traces = {}
     for current in currents.astype(int):
         metrics = extract_pulse_metrics(read_waveform(current))
         raw_metrics[current] = metrics
-        if current in representative_currents:
-            representative_traces[current] = (
-                metrics["time_ns"],
-                metrics["mean_trace_V"],
-            )
+    representative_traces = {
+        current: extract_screenshot_trace(current)
+        for current in representative_currents
+    }
 
     pulse_cv = np.array([raw_metrics[int(c)]["peak_cv_pct"] for c in currents])
     pulse_width = np.array([raw_metrics[int(c)]["width_mean_ns"] for c in currents])
@@ -235,21 +243,36 @@ def main():
             "reverse_delta_pct": reverse_delta_pct,
             "peak_power_mean_mW": power_mean,
             "peak_power_sd_mW": power_sd,
-            "calibration_95ci_halfwidth_mW": calibration_ci,
+            "detector_input_peak_power_uW": voltage_mean
+            / LOADED_CONVERSION_GAIN_V_PER_W
+            * 1e3,
+            "direct_meter_power_mean_mW": np.r_[direct_mean, np.full(14, np.nan)],
+            "direct_meter_difference_mW": np.r_[
+                direct_difference_mW, np.full(14, np.nan)
+            ],
+            "direct_meter_difference_pct": np.r_[
+                direct_difference_pct, np.full(14, np.nan)
+            ],
             "raw_complete_pulses": [raw_metrics[int(c)]["pulse_count"] for c in currents],
             "raw_peak_cv_pct": pulse_cv,
             "raw_apparent_width_mean_ns": pulse_width,
             "raw_apparent_width_sd_ns": pulse_width_sd,
             "raw_period_mean_us": [raw_metrics[int(c)]["period_mean_us"] for c in currents],
             "raw_period_sd_us": [raw_metrics[int(c)]["period_sd_us"] for c in currents],
-            "power_method": ["JW8103A direct"] * 5 + ["BPD calibrated"] * 14,
+            "power_method": ["PD-500B datasheet conversion"] * len(currents),
         }
     )
     summary.to_csv(SUMMARY_CSV, index=False, encoding="utf-8-sig")
 
     stats_output = {
-        "calibration": calibration,
-        "fixed_attenuation_dB": 42,
+        "power_conversion": {
+            "responsivity_A_per_W": RESPONSIVITY_A_PER_W,
+            "loaded_conversion_gain_V_per_W": LOADED_CONVERSION_GAIN_V_PER_W,
+            "equivalent_transimpedance_ohm": EQUIVALENT_TRANSIMPEDANCE_OHM,
+            "fixed_attenuation_dB": FIXED_ATTENUATION_DB,
+            "attenuation_factor": ATTENUATION_FACTOR,
+            "power_factor_mW_per_mV": POWER_FACTOR_MW_PER_MV,
+        },
         "current_range_mA": [int(currents.min()), int(currents.max())],
         "forward_scan_repeats": int(voltage_runs.shape[1]),
         "raw_complete_pulses_per_current": [
@@ -258,6 +281,18 @@ def main():
         ],
         "voltage_mean_endpoints_mV": [float(voltage_mean[0]), float(voltage_mean[-1])],
         "power_mean_endpoints_mW": [float(power_mean[0]), float(power_mean[-1])],
+        "detector_input_power_endpoints_uW": [
+            float(voltage_mean[0] / LOADED_CONVERSION_GAIN_V_PER_W * 1e3),
+            float(voltage_mean[-1] / LOADED_CONVERSION_GAIN_V_PER_W * 1e3),
+        ],
+        "direct_meter_difference_mW_range": [
+            float(direct_difference_mW.min()),
+            float(direct_difference_mW.max()),
+        ],
+        "direct_meter_difference_pct_range": [
+            float(direct_difference_pct.min()),
+            float(direct_difference_pct.max()),
+        ],
         "scan_cv_range_pct": [float(scan_cv.min()), float(scan_cv.max())],
         "pulse_cv_range_pct": [float(pulse_cv.min()), float(pulse_cv.max())],
         "apparent_width_range_ns": [float(pulse_width.min()), float(pulse_width.max())],
@@ -277,27 +312,15 @@ def main():
             time_ns,
             trace,
             color=color,
-            marker="o",
-            markersize=2.3,
-            markeredgewidth=0,
+            linewidth=1.15,
             label=f"{current / 1000:.1f} A",
         )
     ax_a.axhline(0, color="#9CA3AF", linewidth=0.65)
-    ax_a.set_xlim(-180, 300)
-    ax_a.set_xlabel("Time relative to pulse peak (ns)")
+    ax_a.set_xlim(-60, 160)
+    ax_a.set_ylim(-0.08, 1.10)
+    ax_a.set_xlabel("Time relative to trigger (ns)")
     ax_a.set_ylabel("BPD output (V)")
     ax_a.legend(frameon=False, ncol=2, loc="upper right", handlelength=1.7)
-    ax_a.text(
-        0.03,
-        0.95,
-        r"$n=399$ pulses, $\Delta t=20$ ns",
-        transform=ax_a.transAxes,
-        ha="left",
-        va="top",
-        fontsize=7,
-        color=GRAY,
-    )
-
     for run in range(voltage_runs.shape[1]):
         ax_b.plot(
             currents,
@@ -350,7 +373,7 @@ def main():
             alpha=0.58,
             zorder=2,
         )
-    for row, current in enumerate(currents[5:], start=5):
+    for row, current in enumerate(currents):
         ax_c.scatter(
             current + jitter,
             converted_runs[row],
@@ -361,7 +384,7 @@ def main():
             alpha=0.72,
             zorder=2,
         )
-    ax_c.plot(currents, power_mean, color="#9CA3AF", linewidth=0.8, zorder=1)
+    ax_c.plot(currents, power_mean, color=ORANGE, linewidth=1.15, zorder=1)
     ax_c.errorbar(
         currents[:5],
         direct_mean,
@@ -376,19 +399,10 @@ def main():
         label="JW8103A direct (n=5)",
         zorder=4,
     )
-    ax_c.fill_between(
-        currents[5:],
-        power_mean[5:] - calibration_ci[5:],
-        power_mean[5:] + calibration_ci[5:],
-        color=ORANGE,
-        alpha=0.12,
-        linewidth=0,
-        label="Calibration 95% CI",
-    )
     ax_c.errorbar(
-        currents[5:],
-        power_mean[5:],
-        yerr=power_sd[5:],
+        currents,
+        power_mean,
+        yerr=power_sd,
         color=ORANGE,
         linestyle="--",
         marker="s",
@@ -397,18 +411,16 @@ def main():
         markersize=4.2,
         capsize=2.2,
         linewidth=1.4,
-        label="BPD calibrated (n=5)",
+        label="PD-500B datasheet conversion (n=5)",
         zorder=4,
     )
-    ax_c.axvline(650, color="#9CA3AF", linewidth=0.75, linestyle=":")
     ax_c.text(
         0.97,
         0.06,
         (
-            rf"$P_{{\mathrm{{peak}}}}={slope:.3f}V_{{\mathrm{{peak}}}}"
-            rf"+{intercept:.2f}$"
+            rf"$P_{{\mathrm{{SOA}}}}={POWER_FACTOR_MW_PER_MV:.4f}V_{{\mathrm{{scope}}}}$"
             + "\n"
-            + rf"$R^2={calibration['r_squared']:.4f}$"
+            + rf"$G_{{50\,\Omega}}=11$ kV/W, $L={FIXED_ATTENUATION_DB:.0f}$ dB"
         ),
         transform=ax_c.transAxes,
         ha="right",
