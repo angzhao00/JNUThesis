@@ -21,7 +21,7 @@
   "latex-workshop.latex.tools": [
     {
       "name": "latexmk-xelatex",
-      "command": "C:/texlive/2026/bin/windows/latexmk.exe",
+      "command": "latexmk",
       "args": [
         "-synctex=1",
         "-interaction=nonstopmode",
