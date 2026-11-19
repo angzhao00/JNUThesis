@@ -1,0 +1,4 @@
+﻿strategy,overlap_efficiency_pct,leading_energy_loss_pct,trailing_energy_loss_pct,rf_gate_width_ns,rf_duty_cycle_pct
+Continuous RF,100.0,0.0,0.0,,100.0
+Edge-synchronous,49.99671498273112,43.77733708746818,6.17607574518792,100.0,0.02
+Precompensated,99.82601935980422,0.17396524872661615,1.5376934537545582e-05,200.0,0.04

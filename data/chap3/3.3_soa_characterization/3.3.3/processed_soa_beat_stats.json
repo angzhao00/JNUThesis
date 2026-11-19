@@ -1,0 +1,112 @@
+{
+  "fixed_conditions": {
+    "ld_current_mA": 200,
+    "tec_temperature_C": 30,
+    "aom_drive_frequency_MHz": 80,
+    "fiber_length_km": 15,
+    "soa_pulse_repetition_Hz": 2000,
+    "current_scan_pulse_width_ns": 100,
+    "pulse_width_scan_current_mA": 1600
+  },
+  "recording": {
+    "scope": "HDO4804:HDO4A243900769",
+    "channel": "CH2",
+    "sample_rate_GSa_s": 2.0000000565638643,
+    "points_per_file": 10000000,
+    "record_duration_ms": 4.999999858590343,
+    "frames_per_file": 10
+  },
+  "analysis": {
+    "signal_window_us": [
+      0.0,
+      150.0
+    ],
+    "noise_window_us": [
+      300.0,
+      450.0
+    ],
+    "frequency_band_MHz": [
+      40.0,
+      120.0
+    ],
+    "welch_segment_samples": 32768,
+    "spectrum_window": "Hann",
+    "spectral_centroid": "first moment of non-negative signal-minus-noise PSD",
+    "occupied_bandwidth": "5th-to-95th percentile of cumulative excess PSD",
+    "snr": "10*log10((signal-window variance-noise-window variance)/noise-window variance)"
+  },
+  "current_scan": {
+    "conditions_mA": [
+      400,
+      600,
+      800,
+      1000,
+      1200,
+      1400,
+      1600,
+      1800
+    ],
+    "runs_per_condition": 3,
+    "centroid_endpoints_MHz": [
+      77.89064861760039,
+      62.85834338408292
+    ],
+    "bandwidth90_endpoints_MHz": [
+      16.255697074325845,
+      24.47509834845305
+    ],
+    "snr_endpoints_dB": [
+      8.539583238052899,
+      17.72020783866668
+    ],
+    "max_across_run_centroid_sd_MHz": 0.13059313833060285,
+    "frame_centroid_sd_range_MHz": [
+      0.028146357046202542,
+      0.06283469058177968
+    ]
+  },
+  "pulse_width_scan": {
+    "conditions_ns": [
+      50,
+      100,
+      150,
+      200,
+      250
+    ],
+    "runs_per_condition": 3,
+    "centroid_endpoints_MHz": [
+      61.64219558717315,
+      69.62623758916625
+    ],
+    "bandwidth90_endpoints_MHz": [
+      25.533041086707055,
+      18.046061708294147
+    ],
+    "snr_endpoints_dB": [
+      17.979741287099213,
+      22.38465064880582
+    ],
+    "max_across_run_centroid_sd_MHz": 0.15830370424314966,
+    "frame_centroid_sd_range_MHz": [
+      0.021122361241289047,
+      0.07676485181119687
+    ]
+  },
+  "controls": {
+    "BPD blocked, AOM RF off": {
+      "signal_window_rms_raw": 0.011318418490377711,
+      "noise_window_rms_raw": 0.011331134739360985,
+      "band_power_ratio_dB": -0.035256435793390085
+    },
+    "BPD blocked, AOM RF on": {
+      "signal_window_rms_raw": 0.01129732174250281,
+      "noise_window_rms_raw": 0.01129701243270561,
+      "band_power_ratio_dB": -0.026214511338097615
+    },
+    "Optical path connected, AOM RF off": {
+      "signal_window_rms_raw": 0.0252440782567743,
+      "noise_window_rms_raw": 0.025260380393378433,
+      "band_power_ratio_dB": -0.028676380833752187
+    }
+  }
+}

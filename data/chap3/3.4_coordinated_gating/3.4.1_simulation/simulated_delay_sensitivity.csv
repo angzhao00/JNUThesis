@@ -1,0 +1,244 @@
+﻿aom_delay_ns,strategy,overlap_efficiency_pct
+20.0,Continuous RF,100.0
+20.0,Edge-synchronous,78.46047596747307
+20.0,Precompensated,99.9713497200601
+21.0,Continuous RF,100.0
+21.0,Edge-synchronous,77.65447508929674
+21.0,Precompensated,99.97641196151571
+22.0,Continuous RF,100.0
+22.0,Edge-synchronous,76.82761084865528
+22.0,Precompensated,99.98058416913275
+23.0,Continuous RF,100.0
+23.0,Edge-synchronous,75.98160785718456
+23.0,Precompensated,99.98399309652551
+24.0,Continuous RF,100.0
+24.0,Edge-synchronous,75.11811849723557
+24.0,Precompensated,99.98674610103882
+25.0,Continuous RF,100.0
+25.0,Edge-synchronous,74.23871649922671
+25.0,Precompensated,99.98893278551806
+26.0,Continuous RF,100.0
+26.0,Edge-synchronous,73.34489198884172
+26.0,Precompensated,99.9906264489104
+27.0,Continuous RF,100.0
+27.0,Edge-synchronous,72.43804794812833
+27.0,Precompensated,99.99188533260377
+28.0,Continuous RF,100.0
+28.0,Edge-synchronous,71.51949801287357
+28.0,Precompensated,99.99275365232592
+29.0,Continuous RF,100.0
+29.0,Edge-synchronous,70.59046551078774
+29.0,Precompensated,99.99326240792293
+30.0,Continuous RF,100.0
+30.0,Edge-synchronous,69.65208363113383
+30.0,Precompensated,99.99342996546224
+31.0,Continuous RF,100.0
+31.0,Edge-synchronous,68.70539660648164
+31.0,Precompensated,99.99326240792294
+32.0,Continuous RF,100.0
+32.0,Edge-synchronous,67.75136178111435
+32.0,Precompensated,99.99275365232592
+33.0,Continuous RF,100.0
+33.0,Edge-synchronous,66.7908524380407
+33.0,Precompensated,99.99188533260379
+34.0,Continuous RF,100.0
+34.0,Edge-synchronous,65.82466125725603
+34.0,Precompensated,99.9906264489104
+35.0,Continuous RF,100.0
+35.0,Edge-synchronous,64.85350428147477
+35.0,Precompensated,99.98893278551806
+36.0,Continuous RF,100.0
+36.0,Edge-synchronous,63.87802527161165
+36.0,Precompensated,99.9867461010388
+37.0,Continuous RF,100.0
+37.0,Edge-synchronous,62.89880034237388
+37.0,Precompensated,99.98399309652551
+38.0,Continuous RF,100.0
+38.0,Edge-synchronous,61.91634277799935
+38.0,Precompensated,99.98058416913274
+39.0,Continuous RF,100.0
+39.0,Edge-synchronous,60.93110793899547
+39.0,Precompensated,99.97641196151572
+40.0,Continuous RF,100.0
+40.0,Edge-synchronous,59.943498182286056
+40.0,Precompensated,99.97134972006009
+41.0,Continuous RF,100.0
+41.0,Edge-synchronous,58.95386772907513
+41.0,Precompensated,99.9652494783993
+42.0,Continuous RF,100.0
+42.0,Edge-synchronous,57.96252742664551
+42.0,Precompensated,99.95794008648555
+43.0,Continuous RF,100.0
+43.0,Edge-synchronous,56.969749361927946
+43.0,Precompensated,99.9492251097214
+44.0,Continuous RF,100.0
+44.0,Edge-synchronous,55.97577129575425
+44.0,Precompensated,99.93888062727322
+45.0,Continuous RF,100.0
+45.0,Edge-synchronous,54.980800897042705
+45.0,Precompensated,99.92665296360202
+46.0,Continuous RF,100.0
+46.0,Edge-synchronous,53.98501976560082
+46.0,Precompensated,99.91225639234908
+47.0,Continuous RF,100.0
+47.0,Edge-synchronous,52.98858724065569
+47.0,Precompensated,99.8953708568687
+48.0,Continuous RF,100.0
+48.0,Edge-synchronous,51.991643999559436
+48.0,Precompensated,99.87563975674183
+49.0,Continuous RF,100.0
+49.0,Edge-synchronous,50.99431545732745
+49.0,Precompensated,99.85266785434754
+50.0,Continuous RF,100.0
+50.0,Edge-synchronous,49.99671498273112
+50.0,Precompensated,99.82601935980422
+51.0,Continuous RF,100.0
+51.0,Edge-synchronous,48.99894695059549
+51.0,Precompensated,99.79521625610371
+52.0,Continuous RF,100.0
+52.0,Edge-synchronous,48.001109652766495
+52.0,Precompensated,99.75973692881831
+53.0,Continuous RF,100.0
+53.0,Edge-synchronous,47.003298091948096
+53.0,Precompensated,99.71901516614209
+54.0,Continuous RF,100.0
+54.0,Edge-synchronous,46.00560668330958
+54.0,Precompensated,99.67243959501998
+55.0,Continuous RF,100.0
+55.0,Edge-synchronous,45.008131888475354
+55.0,Precompensated,99.61935361752839
+56.0,Continuous RF,100.0
+56.0,Edge-synchronous,44.01097480528457
+56.0,Precompensated,99.55905590833855
+57.0,Continuous RF,100.0
+57.0,Edge-synchronous,43.01424373459757
+57.0,Precompensated,99.49080152889829
+58.0,Continuous RF,100.0
+58.0,Edge-synchronous,42.018056742487246
+58.0,Precompensated,99.41380370683997
+59.0,Continuous RF,100.0
+59.0,Edge-synchronous,41.02254423244057
+59.0,Precompensated,99.32723632004924
+60.0,Continuous RF,100.0
+60.0,Edge-synchronous,40.02785153777405
+60.0,Precompensated,99.23023711386567
+61.0,Continuous RF,100.0
+61.0,Edge-synchronous,39.034141539403834
+61.0,Precompensated,99.12191166715883
+62.0,Continuous RF,100.0
+62.0,Edge-synchronous,38.04159730848621
+62.0,Precompensated,99.00133810872258
+63.0,Continuous RF,100.0
+63.0,Edge-synchronous,37.050424767347515
+63.0,Precompensated,98.86757256983228
+64.0,Continuous RF,100.0
+64.0,Edge-synchronous,36.06085535566159
+64.0,Precompensated,98.71965534224425
+65.0,Continuous RF,100.0
+65.0,Edge-synchronous,35.07314868212726
+65.0,Precompensated,98.55661769378739
+66.0,Continuous RF,100.0
+66.0,Edge-synchronous,34.08759513509307
+66.0,Precompensated,98.3774892764494
+67.0,Continuous RF,100.0
+67.0,Edge-synchronous,33.104518418827986
+67.0,Precompensated,98.18130604498782
+68.0,Continuous RF,100.0
+68.0,Edge-synchronous,32.12427797562749
+68.0,Precompensated,97.9671185881066
+69.0,Continuous RF,100.0
+69.0,Edge-synchronous,31.147271247865906
+69.0,Precompensated,97.73400075965567
+70.0,Continuous RF,100.0
+70.0,Edge-synchronous,30.173935728670383
+70.0,Precompensated,97.48105848463643
+71.0,Continuous RF,100.0
+71.0,Edge-synchronous,29.204750745315973
+71.0,Precompensated,97.20743860450497
+72.0,Continuous RF,100.0
+72.0,Edge-synchronous,28.240238915944733
+72.0,Precompensated,96.91233761877956
+73.0,Continuous RF,100.0
+73.0,Edge-synchronous,27.280967218013743
+73.0,Precompensated,96.59501017563021
+74.0,Continuous RF,100.0
+74.0,Edge-synchronous,26.327547606178246
+74.0,Precompensated,96.25477716322307
+75.0,Continuous RF,100.0
+75.0,Edge-synchronous,25.380637118301692
+75.0,Precompensated,95.89103325627292
+76.0,Continuous RF,100.0
+76.0,Edge-synchronous,24.440937411102986
+76.0,Precompensated,95.50325377858343
+77.0,Continuous RF,100.0
+77.0,Edge-synchronous,23.50919367171373
+77.0,Precompensated,95.09100075226033
+78.0,Continuous RF,100.0
+78.0,Edge-synchronous,22.5861928581847
+78.0,Precompensated,94.653928017592
+79.0,Continuous RF,100.0
+79.0,Edge-synchronous,21.6727612307525
+79.0,Precompensated,94.19178532400939
+80.0,Continuous RF,100.0
+80.0,Edge-synchronous,20.769761146392614
+80.0,Precompensated,93.70442131166293
+81.0,Continuous RF,100.0
+81.0,Edge-synchronous,19.878087101710577
+81.0,Precompensated,93.19178532449139
+82.0,Continuous RF,100.0
+82.0,Edge-synchronous,18.998661023356753
+82.0,Precompensated,92.6539280186363
+83.0,Continuous RF,100.0
+83.0,Edge-synchronous,18.132426820615983
+83.0,Precompensated,92.09100075403971
+84.0,Continuous RF,100.0
+84.0,Edge-synchronous,17.28034423128043
+84.0,Precompensated,91.50325378138882
+85.0,Continuous RF,100.0
+85.0,Edge-synchronous,16.44338200895835
+85.0,Precompensated,90.89103326055624
+86.0,Continuous RF,100.0
+86.0,Edge-synchronous,15.622510517149859
+86.0,Precompensated,90.25477716966266
+87.0,Continuous RF,100.0
+87.0,Edge-synchronous,14.818693812240797
+87.0,Precompensated,89.59501018522728
+88.0,Continuous RF,100.0
+88.0,Edge-synchronous,14.032881313511556
+88.0,Precompensated,88.91233763299775
+89.0,Continuous RF,100.0
+89.0,Edge-synchronous,13.265999172809382
+89.0,Precompensated,88.20743862547005
+90.0,Continuous RF,100.0
+90.0,Edge-synchronous,12.518941469181383
+90.0,Precompensated,87.48105851541997
+91.0,Continuous RF,100.0
+91.0,Edge-synchronous,11.792561364036564
+91.0,Precompensated,86.73400080467607
+92.0,Continuous RF,100.0
+92.0,Edge-synchronous,11.087662359876074
+92.0,Precompensated,85.96711865369268
+93.0,Continuous RF,100.0
+93.0,Edge-synchronous,10.404989809947386
+93.0,Precompensated,85.1813061401676
+94.0,Continuous RF,100.0
+94.0,Edge-synchronous,9.745222827075725
+94.0,Precompensated,84.37748941404918
+95.0,Continuous RF,100.0
+95.0,Edge-synchronous,9.108966737237061
+95.0,Precompensated,83.55661789195645
+96.0,Continuous RF,100.0
+96.0,Edge-synchronous,8.496746217107743
+96.0,Precompensated,82.71965562656085
+97.0,Continuous RF,100.0
+97.0,Edge-synchronous,7.908999244915176
+97.0,Precompensated,81.86757297619994
+98.0,Continuous RF,100.0
+98.0,Edge-synchronous,7.346071980602675
+98.0,Precompensated,81.00133868733626
+99.0,Continuous RF,100.0
+99.0,Edge-synchronous,6.808214674901852
+99.0,Precompensated,80.12191248791248
+100.0,Continuous RF,100.0
+100.0,Edge-synchronous,6.295578687779136
+100.0,Precompensated,79.23023827369346

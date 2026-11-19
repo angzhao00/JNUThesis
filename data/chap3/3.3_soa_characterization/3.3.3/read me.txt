@@ -1,0 +1,16 @@
+测试条件
+LD 200，AOM 80M TEC30℃ SOA脉冲频率2KHz 100ns
+光纤长度 15Km
+分别做了以下实验：
+三组：SOA电流递进的实验，从0.4A步进到1.8A，步进单位是0.2A
+三组：SOA1.6A固定，分别做了SOA脉宽从50-250ns，步进单位是50ns
+一组：暗态对照-BPD遮光-AOM关闭（LD 200mA TEC 30℃ SOA 2KHz 100ns）
+一组：暗态对照-BPD遮光-AOM开启（LD 200mA TEC 30℃ SOA 2KHz 100ns）
+一组：射频对照-AOM射频驱动关闭 （LD 200mA TEC 30℃ SOA 2KHz 100ns）
+
+数据记录与处理说明
+示波器：HDO4804，CH2记录BPD输出；采样率2 GSa/s，每个文件10000000点、5 ms，共10个2 kHz周期。
+不同脉宽实验采用三个目录中以50.bin、100.bin、150.bin、200.bin和250.bin命名的最新数据；目录中旧的pulse *.bin不参与本次分析。
+每帧0-150 μs作为15 km光纤回波窗口，300-450 μs作为同帧噪声窗口；分析频带为40-120 MHz。
+处理脚本：scripts/chap3_soa_beat_characterization.py。
+处理结果：processed_soa_beat_file_metrics.csv、processed_soa_beat_summary.csv、processed_soa_beat_controls.csv和processed_soa_beat_stats.json。

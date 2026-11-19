@@ -1,0 +1,42 @@
+{
+  "classification": "pre-experiment simulation; not measured module data",
+  "random_seed": 360,
+  "monte_carlo_samples": 100000,
+  "source": {
+    "peak_power_mw": 452.482455630182,
+    "peak_power_sd_mw": 0.979676543983881,
+    "off_state_leakage_nw": 1.417
+  },
+  "transmit_path": {
+    "aom_first_order_loss_db": 1.5,
+    "aom_loss_sd_db": 0.15,
+    "circulator_loss_db": 0.8,
+    "circulator_loss_sd_db": 0.08,
+    "internal_joint_count": 2,
+    "flange_loss_db_per_joint": 0.3,
+    "flange_loss_sd_db": 0.08,
+    "fusion_splice_loss_db_per_joint": 0.05,
+    "fusion_splice_loss_sd_db": 0.02
+  },
+  "pulse": {
+    "soa_width_ns": 100.0,
+    "soa_edge_10_90_ns": 6.0,
+    "aom_delay_ns": 50.0,
+    "aom_edge_10_90_ns": 40.0,
+    "precompensation_ns": 80.0,
+    "hold_ns": 20.0
+  },
+  "receiver": {
+    "joints_per_signal_or_lo_arm": 3,
+    "system_d_beat_rms_v": 0.277777858095372,
+    "baseline_spectral_centroid_mhz": 65.4,
+    "baseline_occupied_bandwidth_90_mhz": 23.95,
+    "baseline_snr_db": 20.67,
+    "electronic_noise_fraction": 0.5,
+    "predicted_p_to_s_amplitude_ratio": 1.0,
+    "recommended_p_to_s_ratio_acceptance": [
+      0.95,
+      1.05
+    ]
+  }
+}

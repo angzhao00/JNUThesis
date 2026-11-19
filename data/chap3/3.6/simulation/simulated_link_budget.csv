@@ -1,0 +1,7 @@
+﻿system,element,loss_db
+D,AOM first-order path,1.5
+D,Circulator 1-to-2,0.8
+D,2 internal joints,0.6
+M,AOM first-order path,1.5
+M,Circulator 1-to-2,0.8
+M,2 internal joints,0.1

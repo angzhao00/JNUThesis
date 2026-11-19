@@ -1,0 +1,57 @@
+{
+  "data_classification": "deterministic numerical simulation for teaching",
+  "time_step_ns": 0.1,
+  "time_range_ns": [
+    -200.0,
+    400.0
+  ],
+  "soa_pulse_width_ns": 100.0,
+  "soa_rise_fall_10_90_ns": 6.0,
+  "aom_command_to_optical_delay_ns": 50.0,
+  "aom_rise_fall_10_90_ns": 40.0,
+  "nominal_precompensation_ns": 80.0,
+  "nominal_hold_ns": 20.0,
+  "repetition_rate_Hz": 2000.0,
+  "precompensation_sweep_ns": [
+    0.0,
+    120.0,
+    1.0
+  ],
+  "hold_sweep_ns": [
+    0.0,
+    80.0,
+    1.0
+  ],
+  "aom_delay_sensitivity_ns": [
+    20.0,
+    100.0,
+    1.0
+  ],
+  "model": "difference of Gaussian-smoothed steps; t10-90 = 2.563103 sigma",
+  "strategy_summary": [
+    {
+      "strategy": "Continuous RF",
+      "overlap_efficiency_pct": 100.0,
+      "leading_energy_loss_pct": 0.0,
+      "trailing_energy_loss_pct": 0.0,
+      "rf_gate_width_ns": null,
+      "rf_duty_cycle_pct": 100.0
+    },
+    {
+      "strategy": "Edge-synchronous",
+      "overlap_efficiency_pct": 49.99671498273112,
+      "leading_energy_loss_pct": 43.77733708746818,
+      "trailing_energy_loss_pct": 6.17607574518792,
+      "rf_gate_width_ns": 100.0,
+      "rf_duty_cycle_pct": 0.02
+    },
+    {
+      "strategy": "Precompensated",
+      "overlap_efficiency_pct": 99.82601935980422,
+      "leading_energy_loss_pct": 0.17396524872661615,
+      "trailing_energy_loss_pct": 1.5376934537545582e-05,
+      "rf_gate_width_ns": 200.0,
+      "rf_duty_cycle_pct": 0.04
+    }
+  ]
+}
